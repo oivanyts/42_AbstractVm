@@ -3,13 +3,8 @@
 //
 
 #include <iostream>
+#include "TOperant.h"
 #include "Creator.h"
-
-#include "Double.h"
-#include "Float.h"
-#include "Int8.h"
-#include "Int16.h"
-#include "Int32.h"
 
 Creator::Creator() { }
 
@@ -31,44 +26,38 @@ Creator &Creator::operator=(Creator const &rhs)
 
 IOperand const *Creator::createInt8(std::string const &value) const
 {
-	return new Int8(value);
+	return new TOperant<int8_t>(value);
 }
 
 IOperand const *Creator::createInt16(std::string const &value) const
 {
-	return new Int16(value);
+	return new TOperant<int16_t>(value);
 }
 
 IOperand const *Creator::createInt32(std::string const &value) const
 {
-	return new Int32(value);
+	return new TOperant<int32_t>(value);
 }
 
 IOperand const *Creator::createFloat(std::string const &value) const
 {
-	return new Float(value);
+	return new TOperant<float>(value);
 }
 
 IOperand const *Creator::createDouble(std::string const &value) const
 {
-	return new Double(value);
+	return new TOperant<double>(value);
 }
 
 IOperand const *Creator::createOperand(eOperandType type, std::string const &value) const
 {
-	switch (type)
-	{
-		case eInt8 :
-			return createInt8(value);
-		case eInt16 :
-			return createInt16(value);
-		case eInt32 :
-			return createInt32(value);
-		case eFloat :
-			return createFloat(value);
-		case eDouble :
-			return createDouble(value);
-	}
-	return nullptr;
+	typedef IOperand const *(Creator::*funcptr)(std::string const &value) const;
+	funcptr tmp[] = {
+			&Creator::createInt8,
+			&Creator::createInt16,
+			&Creator::createInt32,
+			&Creator::createFloat,
+			&Creator::createDouble };
+	return (this->*tmp[type])(value);
 }
 

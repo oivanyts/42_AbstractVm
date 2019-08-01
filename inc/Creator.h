@@ -5,18 +5,19 @@
 #ifndef OPERATORMEMB_H
 #define OPERATORMEMB_H
 
-#include <IOperand.h>
+#include "IOperand.h"
 #include <string>
 #include "main.h"
 
-class Creator : private IOperand
+
+class Creator
 {
 public:
 	~Creator();
 	Creator	&operator=(Creator const &rhs);
-	IOperand const * createOperand( eOperandType type, std::string const & value ) const;
-private:
+	IOperand const * createOperand(eOperandType type, std::string const &value) const;
 	Creator();
+private:
 	Creator(Creator const &src);
 	IOperand const	*createInt8(std::string const &value) const;
 	IOperand const	*createInt16(std::string const &value) const;

@@ -5,6 +5,7 @@
 #ifndef IOPERAND_H
 #define IOPERAND_H
 
+#include <iostream>
 #include "main.h"
 
 class IOperand {
