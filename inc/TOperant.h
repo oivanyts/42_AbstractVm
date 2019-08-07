@@ -60,7 +60,6 @@ public:
 		Creator			ret;
 		eOperandType	type = std::max(this->_type, rhs.getType());
 
-
 		//exeption managment
 		return type < eFloat
 			? ret.createOperand(type, std::to_string(_number + std::stoi(rhs.toString())))
@@ -112,9 +111,9 @@ public:
 
 private:
 	T	const				_number;
+	int 					bit = 0b10001;
 	eOperandType const	 	_type;
 	std::string const 		_str;
 };
-
 
 #endif //ABSTRACTVM_TOPERANT_H
