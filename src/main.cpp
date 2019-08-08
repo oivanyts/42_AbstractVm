@@ -3,6 +3,7 @@
 #include <sstream>
 #include <queue>
 #include <Creator.h>
+#include <Lexer.h>
 #include "IOperand.h"
 #include "main.h"
 
@@ -25,6 +26,7 @@ int main() {
 	{
 		std::stringstream test;
 		test << " push int8(123) \n";
+		Lexer	god(test);
 		int i = test.str().find(';');
 		std::string			command;
 		std::string			value;

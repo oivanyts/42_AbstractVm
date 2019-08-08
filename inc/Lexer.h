@@ -2,52 +2,40 @@
 // Created by Oleh IVANYTSKYI on 2019-08-06.
 //
 
-#ifndef ABSTRACTVM_LEXER_H
-#define ABSTRACTVM_LEXER_H
+#ifndef LEXER_H
+#define LEXER_H
 
 
 #include <iostream>
 #include <sstream>
-//#include ""
-
-enum eType{
-	COMMENT = 1,
-	SEMICOL,
-	INST,
-	OPENBR,
-	CLOSEBR,
-	NUMBER,
-	FLOAT,
-	ENDL,
-	SPACE,
-	ERROR = 0
-};
-
-int stateTable[10][10] = {
-	{ ERROR,	SEMICOL,	COMMENT, INST,	OPENBR,	CLOSEBR,	NUMBER,	FLOAT,	ENDL,	SPACE},
-	{ SEMICOL,	ENDL},
-	{ COMMENT,		COMMENT,COMMENT,COMMENT,	COMMENT,COMMENT,ENDL,	COMMENT},
-	{ INST,			INST,	0,		0, 			0,		0, 		ENDL,	SPACE},
-	{ OPENBR,		0,		0,		0,			NUMBER,	0, 		0, 		SPACE},
-	{ CLOSEBR,		0, 		0,		0,			0,		0,		ENDL,	SPACE},
-	{ NUMBER,		0,		0,		0,			NUMBER,	FLOAT,	0,		SPACE},
-	{ FLOAT, 		0, 		0,		CLOSEBR,	NUMBER,	0,		0,		SPACE},
-	{ ENDL, 		INST,	0,		0,			0,		0,		ENDL,	SPACE},
-	{ SPACE,		INST,	OPENBR,	CLOSEBR,	NUMBER,	FLOAT,	ENDL,	SPACE}
-};
+#include <queue>
+#include "Token.h"
 
 class Lexer
 {
 
 public:
-	Lexer();
+	Lexer() = default;
 	~Lexer();
 	Lexer(Lexer const &src);
-	Lexer(std::stringstream const &sorce);
+	Lexer(std::stringstream &sorce);
 	Lexer &operator=(Lexer const &rhs);
 
+	std::stringstream & getRaw() const;
+
 private:
-	std::stringstream const _raw;
+	void runFile();
+	void saveToken(eType type);
+	std::stringstream 			&_raw;
+
+private:
+	std::queue<Token *>			_tokQue;
+	int 						_location;
+	int 						_startTok;
+
+	eType findType(char &i);
+
+	void printAllTok();
 };
 
 
