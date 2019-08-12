@@ -27,6 +27,7 @@ int main() {
 		std::stringstream test;
 		test << " push int8(123) \n";
 		Lexer	god(test);
+
 		int i = test.str().find(';');
 		std::string			command;
 		std::string			value;

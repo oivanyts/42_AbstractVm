@@ -10,10 +10,10 @@
 eType Token::stateTable[9][9] = {
 		{ ERROR,	COMMENT,	INST,	OPENBR,	CLOSEBR,	NUMBER,	DOT,	ENDL,	SPACE},
 		{ COMMENT,	COMMENT,	COMMENT,COMMENT,COMMENT,	COMMENT,COMMENT,ENDL,	COMMENT},
-		{ INST,		COMMENT,	INST,	ERROR, 	ERROR,		ERROR, 	ERROR,	ENDL,	SPACE},
+		{ INST,		COMMENT,	INST,	ERROR, 	ERROR,		NUMBER,	ERROR,	ENDL,	SPACE},
 		{ OPENBR,	COMMENT,	ERROR,	ERROR,	ERROR,		NUMBER,	ERROR, 	ERROR,	SPACE},
 		{ CLOSEBR,	COMMENT,	ERROR,	ERROR,	ERROR,		ERROR,	ERROR,	ENDL,	SPACE},
-		{ NUMBER,	COMMENT,	ERROR,	ERROR,	CLOSEBR,	NUMBER,	DOT,	ERROR,	SPACE},
+		{ NUMBER,	COMMENT,	ERROR,	OPENBR,	CLOSEBR,	NUMBER,	DOT,	ERROR,	SPACE},
 		{ DOT, 		ERROR,		ERROR,	ERROR,	ERROR,		NUMBER,	ERROR,	ERROR,	SPACE},
 		{ ENDL, 	COMMENT,	INST,	ERROR,	ERROR,		ERROR,	ERROR,	ENDL,	SPACE},
 		{ SPACE,	COMMENT,	INST,	OPENBR,	CLOSEBR,	NUMBER,	DOT,	ENDL,	SPACE}
@@ -67,7 +67,8 @@ Token::Token(eType const type, int size, int place, std::string const &str)
 
 void Token::printTok() const
 {
-	std::cout << "[" << Token::tokType[_type]  << "]" << _value << std::endl;
+	std::cout << "[" << Token::tokType[_type]  << "] = {" << _value << "} > " <<
+	_place << std::endl;
 }
 
 const int Token::getPlace() const
