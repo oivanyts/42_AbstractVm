@@ -25,19 +25,14 @@ int main() {
 	std::cout << a.size() << " size start\n";
 	{
 		std::stringstream test;
-		test << " push int8(123) \n";
+		test << " push int32(33.33)\nadd \n assert int32(5)\n";
 		Lexer	god(test);
 
 		int i = test.str().find(';');
 		std::string			command;
 		std::string			value;
 		std::stringstream 	num;
-		int					token = -1;
-		std::queue<std::pair<int,char>>	qqqq;
-		qqqq.push(std::make_pair(3, 's'));
-		test >> command >> value;
-		std::cout << "i = "<< i << "\ncommand {" << command << "}\nvalue{" << value << "}" << std::endl;
-		std::cout << qqqq.back().first << qqqq.back().second;
+
 	}
 //	{
 //		a.push_back(ad.createOperand(eInt8, "17"));

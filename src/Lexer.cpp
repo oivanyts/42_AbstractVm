@@ -14,10 +14,10 @@ Lexer::~Lexer()
 	//delete tokens;
 }
 
-Lexer::Lexer(Lexer const &src) : _raw(src.getRaw())
-{
-	*this = src;
-}
+//Lexer::Lexer(Lexer const &src) : _raw(src.getRaw())
+//{
+//	*this = src;
+//}
 
 Lexer &Lexer::operator=(Lexer const &rhs)
 {
@@ -27,7 +27,7 @@ Lexer &Lexer::operator=(Lexer const &rhs)
 	return *this;
 }
 
-Lexer::Lexer(std::stringstream &sorce) : _raw(sorce)
+Lexer::Lexer(std::stringstream &sorce) : _raw(sorce.str())
 {
 	runFile();
 }
@@ -40,33 +40,35 @@ void Lexer::saveToken(eType type)
 //		_raw >> a;
 //	}
 //	else
-	a  = _raw.get();
+//		a  = _raw.get();
 	_tokQue.push(new Token(type, _location - _startTok, _location, a));
 }
 
 void Lexer::runFile()
 {
-	eType	old = SPACE, curr;
-	std::string	tmp;
+	eType	old = REJECT, curr, col;
+	std::string	currTok = "";
+	char 		cuurChar = 0;
 	_location = 0;
-	std::cout << _raw.str();
-	for (auto wrapIter = &(_raw.str())[0]; *wrapIter != '\0'; ++wrapIter)
+//	std::cout << ;
+	for (auto wrapIter = &(_raw)[0]; *wrapIter != '\0'; ++wrapIter)
 	{
 		std::cout << *wrapIter << std::endl;
-		curr = findType(*wrapIter);
-		tmp += *wrapIter;
-		if (curr != old)
+		col = findType(*wrapIter);
+		curr = Token::stateTable[old][col];
+		if (curr == REJECT)
 		{
-			saveToken(Token::stateTable[old][curr]);
-			old = Token::stateTable[old][curr];
-			_startTok = _location;
-			tmp = "";
+			if (old != SPACE)
+				_tokQue.push(new Token(currTok, _location, col));
+				currTok = *wrapIter;
+				_startTok = _location;
+//			currTok = "";
 		}
 		else
 		{
-			_tokQue.front()
+			currTok += *wrapIter;
 		}
-
+		old = col;
 		_location++;
 	}
 	printAllTok();
@@ -83,14 +85,14 @@ eType Lexer::findType(char &i)
 	else if (i == ')')
 		return CLOSEBR;
 	else if (i == '.')
-		return DOT;
+		return FLOAT;
 	else if (std::isalpha(i))
 		return INST;
 	else if (std::isdigit(i))
 		return NUMBER;
 	else if (std::isspace(i))
 		return SPACE;
-	return ERROR;
+	return REJECT;
 }
 
 void Lexer::printAllTok()
@@ -102,7 +104,7 @@ void Lexer::printAllTok()
 	}
 }
 
-std::stringstream & Lexer::getRaw() const
-{
-	return _raw;
-}
+//std::stringstream & Lexer::getRaw() const
+//{
+//	return _raw;
+//}

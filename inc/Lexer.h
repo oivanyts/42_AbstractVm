@@ -21,12 +21,12 @@ public:
 	Lexer(std::stringstream &sorce);
 	Lexer &operator=(Lexer const &rhs);
 
-	std::stringstream & getRaw() const;
+//	std::stringstream & getRaw() const;
 
 private:
 	void runFile();
 	void saveToken(eType type);
-	std::stringstream 			&_raw;
+	std::string 			_raw;
 
 private:
 	std::queue<Token *>			_tokQue;

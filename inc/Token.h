@@ -14,10 +14,10 @@ enum eType{
 	OPENBR,
 	CLOSEBR,
 	NUMBER,
-	DOT,
+	FLOAT,
 	ENDL,
 	SPACE,
-	ERROR = 0
+	REJECT = 0
 };
 
 
@@ -26,7 +26,8 @@ class Token
 {
 public:
 	Token();
-	Token(eType const type, int size, int place, std::string const &str);
+	Token(eType const type, int size, int place, std::string str);
+	Token(std::string str, int place, eType curr);
 	~Token();
 	Token(Token const &src);
 
