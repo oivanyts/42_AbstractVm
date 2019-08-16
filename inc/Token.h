@@ -9,7 +9,7 @@
 #include "main.h"
 
 enum eType{
-	COMMENT = 1,
+	REJECT = 0,
 	INST,
 	OPENBR,
 	CLOSEBR,
@@ -17,7 +17,9 @@ enum eType{
 	FLOAT,
 	ENDL,
 	SPACE,
-	REJECT = 0
+	COMNT,
+	BADINST,
+	VALUE
 };
 
 
@@ -26,28 +28,29 @@ class Token
 {
 public:
 	Token();
-	Token(eType const type, int size, int place, std::string str);
 	Token(std::string str, int place, eType curr);
 	~Token();
 	Token(Token const &src);
 
 	Token &operator=(Token const &rhs);
-
-	const eType getType() const;
 	void printTok() const;
-	const int getSize() const;
-	static eType stateTable[9][9];
 
-	const int getPlace() const;
+	eType getType() const;
+
+	int getNumInst() const;
+
+	const std::string &getValue() const;
 
 private:
-	static std::string tokType[9];
-	eType const _type;
+
+	eType 				_type;
 	std::string	const	_value;
-	int const 	_size;
-	int const 	_place;
-
-
+	int const 			row;
+	int const 			col;
+	int					num_inst;
+	static int			endl_counter;
+	static std::string	tokType[11];
+	void				deal_instance();
 };
 
 

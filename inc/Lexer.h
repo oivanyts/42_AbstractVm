@@ -20,20 +20,15 @@ public:
 	Lexer(Lexer const &src);
 	Lexer(std::stringstream &sorce);
 	Lexer &operator=(Lexer const &rhs);
-
-//	std::stringstream & getRaw() const;
+	const std::queue<Token *> &getTokQue() const;
 
 private:
 	void runFile();
-	void saveToken(eType type);
-	std::string 			_raw;
-
-private:
+	const std::string 			_raw;
 	std::queue<Token *>			_tokQue;
-	int 						_location;
-	int 						_startTok;
+	static eType stateTable[9][9];
 
-	eType findType(char &i);
+	eType findType(const char &i) const;
 
 	void printAllTok();
 };

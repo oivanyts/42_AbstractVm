@@ -4,6 +4,18 @@
 
 #include "Lexer.h"
 
+eType Lexer::stateTable[9][9] = {
+		{ REJECT,	INST,	OPENBR,	CLOSEBR,	NUMBER,	FLOAT,	ENDL,	SPACE, COMNT},
+		{ INST,		INST,	REJECT, REJECT, 	INST,	REJECT,	REJECT,	REJECT, REJECT},
+		{ OPENBR,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	REJECT, REJECT },
+		{ CLOSEBR,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	REJECT, REJECT},
+		{ NUMBER,	REJECT,	REJECT,	REJECT,		NUMBER,	FLOAT,	REJECT,	REJECT, REJECT },
+		{ FLOAT, 	REJECT,	REJECT,	REJECT,		FLOAT,	REJECT,	REJECT,	REJECT, REJECT },
+		{ ENDL,		REJECT,	REJECT,	REJECT,		REJECT,	REJECT, ENDL,	REJECT, REJECT },
+		{ SPACE,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	SPACE, REJECT },
+		{ COMNT,	COMNT,	COMNT,	COMNT,	COMNT,		COMNT,	COMNT,	REJECT,	COMNT}
+};
+
 //Lexer::Lexer() : _raw()
 //{
 //
@@ -14,15 +26,16 @@ Lexer::~Lexer()
 	//delete tokens;
 }
 
-//Lexer::Lexer(Lexer const &src) : _raw(src.getRaw())
-//{
-//	*this = src;
-//}
+Lexer::Lexer(Lexer const &src) : _raw(src._raw)
+{
+	*this = src;
+}
 
 Lexer &Lexer::operator=(Lexer const &rhs)
 {
 	if (&rhs != this)
 	{
+		std::copy(rhs._tokQue.front(), rhs._tokQue.back(), _tokQue.front());
 	}
 	return *this;
 }
@@ -32,54 +45,48 @@ Lexer::Lexer(std::stringstream &sorce) : _raw(sorce.str())
 	runFile();
 }
 
-void Lexer::saveToken(eType type)
-{
-	std::string a;
-//	if (type == INST || type == NUMBER)
-//	{
-//		_raw >> a;
-//	}
-//	else
-//		a  = _raw.get();
-	_tokQue.push(new Token(type, _location - _startTok, _location, a));
-}
-
 void Lexer::runFile()
 {
-	eType	old = REJECT, curr, col;
-	std::string	currTok = "";
-	char 		cuurChar = 0;
-	_location = 0;
-//	std::cout << ;
-	for (auto wrapIter = &(_raw)[0]; *wrapIter != '\0'; ++wrapIter)
+	eType			old = REJECT, curr, col;
+	std::string		currTok;
+	int 			_location = 0;
+
+	std::cout << _raw;
+	for (auto wrapIter = &(_raw)[0]; *wrapIter != '\0'; wrapIter++)
 	{
-		std::cout << *wrapIter << std::endl;
 		col = findType(*wrapIter);
-		curr = Token::stateTable[old][col];
+		curr = stateTable[old][col];
 		if (curr == REJECT)
 		{
 			if (old != SPACE)
-				_tokQue.push(new Token(currTok, _location, col));
-				currTok = *wrapIter;
-				_startTok = _location;
-//			currTok = "";
+			{
+				_tokQue.push(new Token(currTok, _location, old));
+			}
+			currTok = *wrapIter;
+			if (old == ENDL)
+			{
+				_location = 0;
+			}
+			_location++;
+			old = col;
+			continue ;
 		}
 		else
 		{
 			currTok += *wrapIter;
+			old = curr;
+			_location++;
 		}
-		old = col;
-		_location++;
 	}
 	printAllTok();
 }
 
-eType Lexer::findType(char &i)
+eType Lexer::findType(const char &i) const
 {
 	if (i == '\n')
 		return ENDL;
 	else if (i == ';')
-		return COMMENT;
+		return COMNT;
 	else if (i == '(')
 		return OPENBR;
 	else if (i == ')')
@@ -104,7 +111,7 @@ void Lexer::printAllTok()
 	}
 }
 
-//std::stringstream & Lexer::getRaw() const
-//{
-//	return _raw;
-//}
+const std::queue<Token *> &Lexer::getTokQue() const
+{
+	return _tokQue;
+}

@@ -4,19 +4,10 @@
 #include <queue>
 #include <Creator.h>
 #include <Lexer.h>
+#include <Parser.h>
 #include "IOperand.h"
 #include "main.h"
 
-
-std::string	TokenTypes[] = {
-		"bad instance",
-		"good instance",
-		"brace open",
-		"brace close",
-		"int",
-		"dot",
-		"delimiter"
-};
 
 int main() {
 	std::deque<IOperand const *> a;
@@ -25,14 +16,9 @@ int main() {
 	std::cout << a.size() << " size start\n";
 	{
 		std::stringstream test;
-		test << " push int32(33.33)\nadd \n assert int32(5)\n";
-		Lexer	god(test);
-
-		int i = test.str().find(';');
-		std::string			command;
-		std::string			value;
-		std::stringstream 	num;
-
+		test << " push int32( 33.33 )\nadd\n assert int8(5)\n";
+		Lexer	lex(test);
+		Parser	parse(lex.getTokQue());
 	}
 //	{
 //		a.push_back(ad.createOperand(eInt8, "17"));

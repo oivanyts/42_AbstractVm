@@ -6,12 +6,16 @@
 #define ABSTRACTVM_PARSER_H
 
 
+#include <queue>
+#include "Token.h"
+#include "Command.h"
+#include "main.h"
 class Parser
 {
 
 public:
 	Parser();
-
+	Parser(std::queue<Token *>);
 	~Parser();
 
 	Parser(Parser const &src);
@@ -19,7 +23,11 @@ public:
 	Parser &operator=(Parser const &rhs);
 
 private:
+	std::queue<Command *> comands;
 
+	void dealLong(std::queue<Token *> queue);
+
+	void dealShort(std::queue<Token *> queue);
 };
 
 
