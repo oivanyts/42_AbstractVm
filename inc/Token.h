@@ -34,11 +34,8 @@ public:
 
 	Token &operator=(Token const &rhs);
 	void printTok() const;
-
 	eType getType() const;
-
 	int getNumInst() const;
-
 	const std::string &getValue() const;
 
 private:
@@ -47,7 +44,7 @@ private:
 	std::string	const	_value;
 	int const 			row;
 	int const 			col;
-	int					num_inst;
+	int					_numInst;
 	static int			endl_counter;
 	static std::string	tokType[11];
 	void				deal_instance();

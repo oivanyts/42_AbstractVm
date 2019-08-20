@@ -21,13 +21,12 @@ public:
 	Parser(Parser const &src);
 
 	Parser &operator=(Parser const &rhs);
+	void prQue();
+	std::queue<Command *> & getComands();
 
 private:
 	std::queue<Command *> comands;
 
-	void dealLong(std::queue<Token *> queue);
-
-	void dealShort(std::queue<Token *> queue);
 };
 
 

@@ -78,7 +78,8 @@ void Lexer::runFile()
 			_location++;
 		}
 	}
-	printAllTok();
+	_tokQue.push(new Token(currTok, _location, old));
+//	printAllTok();
 }
 
 eType Lexer::findType(const char &i) const

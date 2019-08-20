@@ -26,7 +26,7 @@ std::vector<std::string> valueTok = {
 		"int8", "int16", "int32", "float", "double"
 };
 
-Token::Token() : _type(SPACE), _value(" "), row(0), col(0), comLong(false)
+Token::Token() : _type(SPACE), _value(" "), row(0), col(0)
 { }
 
 Token::~Token()
@@ -41,7 +41,7 @@ Token &Token::operator=(Token const &rhs)
 {
 	if (&rhs != this)
 	{
-		comLong = rhs.comLong;
+		_numInst = rhs._numInst;
 	}
 	return *this;
 }
@@ -69,7 +69,7 @@ void Token::deal_instance()
 		if (found != valueTok.end())
 		{
 			std::cout << found - valueTok.begin() << "< HERE" << std::endl;
-			num_inst = found - valueTok.begin();
+			_numInst = found - valueTok.begin();
 			_type = VALUE;
 			return ;
 		}
@@ -77,8 +77,8 @@ void Token::deal_instance()
 		if (found2 == commandTok.end())
 			_type = BADINST;
 		else
-			num_inst = found2 - commandTok.begin();
-		std::cout << num_inst << "< HERE in" << std::endl;
+			_numInst = found2 - commandTok.begin();
+		std::cout << _numInst << "< HERE in" << std::endl;
 	}
 }
 
@@ -94,5 +94,5 @@ const std::string &Token::getValue() const
 
 int Token::getNumInst() const
 {
-	return num_inst;
+	return _numInst;
 }

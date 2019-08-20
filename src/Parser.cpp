@@ -32,30 +32,23 @@ Parser &Parser::operator=(Parser const &rhs)
 
 Parser::Parser(std::queue<Token *> a)
 {
-	Token *tmp;
+	Token *tmpTok;
 	while (!a.empty())
 	{
+		comands.push(new Command);
 		try
 		{
-			int i;
-			while (a.front()->getType() == commandLine[i])
+			while (a.front()->getType() != ENDL && !a.empty())
 			{
-				tmp = a.front();
+				tmpTok = a.front();
+				comands.back()->setFunc(*tmpTok);
 				a.pop();
-				if (tmp->getNumInst() < 2)
-				{
-					dealLong(a);
-				}
-				else
-				{
-					dealShort(a);
-				}
 			}
-//			throw std::invalid_argument("BAD COMMAND");
+			a.pop();
 		}
-		catch (std::exception&)
+		catch (std::invalid_argument &e)
 		{
-			std::cout << "SYNTAX ERROR : " << __LINE__ << std::endl;
+			std::cout << "SYNTAX ERROR : " << e.what() << std::endl;
 			while (a.front()->getType() != ENDL)
 				a.pop();
 			a.pop();
@@ -63,28 +56,44 @@ Parser::Parser(std::queue<Token *> a)
 	}
 }
 
-void Parser::dealLong(std::queue<Token *> queue)
+void Parser::prQue()
 {
-	if (queue.front()->getType() == VALUE)
+	while (!comands.empty())
 	{
-		std::cout << queue.front()->getValue();
-		queue.pop();
-	}
-	else
-	{
-		throw std::invalid_argument("BAD VALUE TYPE");
+		std::cout << comands.front()->getInts() << " inst " <<
+		comands.front()->getValue() << " value " <<
+		comands.front()->getNum() << " num\n";
+		comands.pop();
 	}
 }
 
-void Parser::dealShort(std::queue<Token *> queue)
+std::queue<Command *> & Parser::getComands()
 {
-	if (queue.front()->getType() == ENDL)
-	{
-		queue.pop();
-	}
-	else
-	{
-		throw std::invalid_argument("BAD VALUE TYPE");
-	}
-
+	return comands;
 }
+
+//void Parser::dealLong(std::queue<Token *> queue)
+//{
+//	if (queue.front()->getType() == VALUE)
+//	{
+//		std::cout << queue.front()->getValue();
+//		queue.pop();
+//	}
+//	else
+//	{
+//		throw std::invalid_argument("BAD VALUE TYPE");
+//	}
+//}
+
+//void Parser::dealShort(std::queue<Token *> queue)
+//{
+//	if (queue.front()->getType() == ENDL)
+//	{
+//		queue.pop();
+//	}
+//	else
+//	{
+//		throw std::invalid_argument("BAD VALUE TYPE");
+//	}
+//
+//}

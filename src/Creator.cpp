@@ -57,7 +57,8 @@ IOperand const *Creator::createOperand(eOperandType type, std::string const &val
 			&Creator::createInt16,
 			&Creator::createInt32,
 			&Creator::createFloat,
-			&Creator::createDouble };
+			&Creator::createDouble
+	};
 	return (this->*tmp[type])(value);
 }
 
