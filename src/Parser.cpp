@@ -49,9 +49,8 @@ Parser::Parser(std::queue<Token *> a)
 		catch (std::invalid_argument &e)
 		{
 			std::cout << "SYNTAX ERROR : " << e.what() << std::endl;
-			while (a.front()->getType() != ENDL)
+			while (!a.empty())
 				a.pop();
-			a.pop();
 		}
 	}
 }

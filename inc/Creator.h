@@ -17,7 +17,7 @@ public:
 	Creator	&operator=(Creator const &rhs);
 
 	Creator();
-	IOperand const * createOperand(eOperandType type, std::string const &value) const;
+	IOperand const *createOperand(eOperandType type, std::string const &value) const;
 private:
 	Creator(Creator const &src);
 	IOperand const	*createInt8(std::string const &value) const;

@@ -27,10 +27,11 @@ public:
 
 	Machine &operator=(Machine const &rhs);
 
-	Machine func(int num, eOperandType type, std::string const &value);
+	void func(int num, eOperandType type, std::string const &value);
 private:
-	std::deque<IOperand *> VM;
+	std::deque<IOperand const *> VM;
 	Creator	factory;
+	bool 	exitFound;
 
 	void initPair();
 	void 	fPush(eOperandType type, std::string const &value);
