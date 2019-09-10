@@ -5,7 +5,6 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-
 #include <iostream>
 #include <sstream>
 #include <queue>
@@ -26,7 +25,7 @@ private:
 	void runFile();
 	const std::string 			_raw;
 	std::queue<Token *>			_tokQue;
-	static eType stateTable[9][9];
+	static eType stateTable[10][10];
 
 	eType findType(const char &i) const;
 

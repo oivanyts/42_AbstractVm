@@ -4,17 +4,19 @@
 
 #include "Lexer.h"
 
-eType Lexer::stateTable[9][9] = {
-		{ REJECT,	INST,	OPENBR,	CLOSEBR,	NUMBER,	FLOAT,	ENDL,	SPACE, COMNT},
-		{ INST,		INST,	REJECT, REJECT, 	INST,	REJECT,	REJECT,	REJECT, REJECT},
-		{ OPENBR,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	REJECT, REJECT },
-		{ CLOSEBR,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	REJECT, REJECT},
-		{ NUMBER,	REJECT,	REJECT,	REJECT,		NUMBER,	FLOAT,	REJECT,	REJECT, REJECT },
-		{ FLOAT, 	REJECT,	REJECT,	REJECT,		FLOAT,	REJECT,	REJECT,	REJECT, REJECT },
-		{ ENDL,		REJECT,	REJECT,	REJECT,		REJECT,	REJECT, ENDL,	REJECT, REJECT },
-		{ SPACE,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	SPACE, REJECT },
-		{ COMNT,	COMNT,	COMNT,	COMNT,	COMNT,		COMNT,	COMNT,	REJECT,	COMNT}
+eType Lexer::stateTable[10][10] = {
+	{ REJECT,	INST,	OPENBR,	CLOSEBR,	NUMBER,	FLOAT,	ENDL,	SPACE,	COMNT,	SIGN},
+	{ INST,		INST,	REJECT, REJECT, 	INST,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
+	{ OPENBR,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
+	{ CLOSEBR,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
+	{ NUMBER,	REJECT,	REJECT,	REJECT,		NUMBER,	FLOAT,	REJECT,	REJECT, REJECT, REJECT},
+	{ FLOAT, 	REJECT,	REJECT,	REJECT,		FLOAT,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
+	{ ENDL,		REJECT,	REJECT,	REJECT,		REJECT,	REJECT, ENDL,	REJECT, REJECT,	REJECT},
+	{ SPACE,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	SPACE,	REJECT, REJECT},
+	{ COMNT,	COMNT,	COMNT,	COMNT,		COMNT,	COMNT,	COMNT,	REJECT,	COMNT,	REJECT},
+	{ SIGN,		REJECT,	REJECT,	REJECT,		NUMBER,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
 };
+
 
 //Lexer::Lexer() : _raw()
 //{
@@ -42,6 +44,10 @@ Lexer &Lexer::operator=(Lexer const &rhs)
 
 Lexer::Lexer(std::stringstream &sorce) : _raw(sorce.str())
 {
+	for (auto wrapIter = _raw.begin(); wrapIter != _raw.end(); ++wrapIter)
+	{
+		
+	}
 	runFile();
 }
 
@@ -52,13 +58,14 @@ void Lexer::runFile()
 	int 			_location = 0;
 
 	std::cout << _raw;
+	
 	for (auto wrapIter = &(_raw)[0]; *wrapIter != '\0'; wrapIter++)
 	{
 		col = findType(*wrapIter);
 		curr = stateTable[old][col];
 		if (curr == REJECT)
 		{
-			if (old != SPACE)
+			if (old != SPACE && old != COMNT)
 			{
 				_tokQue.push(new Token(currTok, _location, old));
 			}
@@ -77,9 +84,10 @@ void Lexer::runFile()
 			old = curr;
 			_location++;
 		}
+		if (currTok == ";;")
+			break ;
 	}
 	_tokQue.push(new Token(currTok, _location, old));
-//	printAllTok();
 }
 
 eType Lexer::findType(const char &i) const
@@ -96,6 +104,8 @@ eType Lexer::findType(const char &i) const
 		return FLOAT;
 	else if (std::isalpha(i))
 		return INST;
+	else if (i == '-' || i == '+')
+		return SIGN;
 	else if (std::isdigit(i))
 		return NUMBER;
 	else if (std::isspace(i))
@@ -110,6 +120,7 @@ void Lexer::printAllTok()
 		_tokQue.front()->printTok();
 		_tokQue.pop();
 	}
+
 }
 
 const std::queue<Token *> &Lexer::getTokQue() const

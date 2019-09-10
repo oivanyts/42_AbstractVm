@@ -6,6 +6,7 @@
 #include "Parser.h"
 
 eType commandLine[] = {VALUE, OPENBR, NUMBER, CLOSEBR, ENDL};
+
 Parser::Parser()
 {
 
@@ -38,13 +39,14 @@ Parser::Parser(std::queue<Token *> a)
 		comands.push(new Command);
 		try
 		{
-			while (a.front()->getType() != ENDL && !a.empty())
+			while (!a.empty() && a.front()->getType() != ENDL)
 			{
 				tmpTok = a.front();
 				comands.back()->setFunc(*tmpTok);
 				a.pop();
 			}
-			a.pop();
+			if (!a.empty())
+				a.pop();
 		}
 		catch (std::invalid_argument &e)
 		{

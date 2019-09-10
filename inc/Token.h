@@ -18,8 +18,9 @@ enum eType{
 	ENDL,
 	SPACE,
 	COMNT,
+	SIGN,
 	BADINST,
-	VALUE
+	VALUE,
 };
 
 
@@ -46,7 +47,7 @@ private:
 	int const 			col;
 	int					_numInst;
 	static int			endl_counter;
-	static std::string	tokType[11];
+	static std::string	tokType[12];
 	void				deal_instance();
 };
 

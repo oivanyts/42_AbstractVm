@@ -1,6 +1,12 @@
 NAME 		    = abstractVm
 
-SRC             += main.cpp
+SRC             +=Command.cpp
+SRC             +=Creator.cpp
+SRC             +=Lexer.cpp
+SRC             +=Machine.cpp
+SRC             +=main.cpp
+SRC             +=Parser.cpp
+SRC             +=Token.cpp
 
 SRC_DIR         = ./src/
 INC_DIR         = ./inc/

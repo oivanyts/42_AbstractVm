@@ -13,9 +13,9 @@ int Token::endl_counter = 0;
 
 
 
-std::string Token::tokType[11] = {
+std::string Token::tokType[12] = {
 		"REJECT", "INST", "OPENBR", "CLOSEBR", "INT", "FLOAT", "ENDL",
-		"SPACE","COMNT", "BAD", "VALUE"
+		"SPACE","COMNT", "SIGN", "BAD", "VALUE"
 };
 
 std::vector<std::string> commandTok = {

@@ -48,8 +48,8 @@ public:
 	TOperant(std::string const &value)
 		: _number(toNum(value)), _type(setType(_number)), _str(value) {};
 	~TOperant() {};
-	TOperant(TOperant const &src) {};
-	TOperant &operator=(TOperant const &rhs) {};
+	TOperant(TOperant const &src) { (void)src; }; //
+	TOperant &operator=(TOperant const &rhs) { (void)rhs; }; //
 
 	int getPrecision(void) const override {	return static_cast<int>(getType()); }
 

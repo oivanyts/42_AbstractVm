@@ -8,6 +8,6 @@ add_executable(abstractVm
         src/Creator.cpp
         src/Parser.cpp
         src/Lexer.cpp
-        src/Token.cpp src/Command.cpp inc/Command.h src/Machine.cpp src/Machine.h)
+        src/Token.cpp src/Command.cpp inc/Command.h src/Machine.cpp inc/Machine.h)
 
 target_include_directories(abstractVm PRIVATE inc)

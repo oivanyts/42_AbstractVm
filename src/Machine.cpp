@@ -32,7 +32,8 @@ void Machine::fPush(eOperandType type, std::string const &value)
 
 void Machine::fAssert(eOperandType type, std::string const &value)
 {
-
+	(void)type;
+	(void)value;
 }
 
 void Machine::fPop(eOperandType , std::string const &)

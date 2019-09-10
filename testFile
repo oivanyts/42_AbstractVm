@@ -1,0 +1,6 @@
+push int32( -33)
+push float( +20.2) ;asd
+push double(  -40.2)
+;;
+add
+exit

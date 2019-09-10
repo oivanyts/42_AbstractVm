@@ -5,17 +5,33 @@
 #include <Creator.h>
 #include <Lexer.h>
 #include <Parser.h>
+#include <fstream>
 #include "IOperand.h"
 #include "main.h"
 #include "Machine.h"
 
 
 int main(int ac, char *av[]) {
-	std::stringstream test;
-//	test << " push int32(33)\n push float(2.2)\nadd\n\n";
-	test << av[1];
-	Lexer	lex(test);
-	Parser	parse(lex.getTokQue());
-	Machine	main(parse.getComands());
+
+	std::stringstream buffer;
+	if (ac > 1)
+	{
+		std::string	filename(av[1]);
+		std::ifstream fileopened(filename);
+		buffer << fileopened.rdbuf();
+	}
+	else
+	{
+		std::string line;
+		while (line != ";;" && !std::cin.eof())
+		{
+
+			std::getline(std::cin, line, '\n');
+			buffer << line << '\n';
+		}
+	}
+	Lexer         lex(buffer);
+	Parser        parse(lex.getTokQue());
+	Machine       main(parse.getComands());
 	return 0;
 }
