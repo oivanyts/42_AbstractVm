@@ -33,7 +33,7 @@ private:
 	Creator	factory;
 	bool 	exitFound;
 
-	void initPair();
+	void	initPair();
 	void 	fPush(eOperandType type, std::string const &value);
 	void 	fAssert(eOperandType type, std::string const &value);
 	void 	fPop(eOperandType type, std::string const &value);

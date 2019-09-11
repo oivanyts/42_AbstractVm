@@ -32,7 +32,7 @@ Token::Token() : _type(SPACE), _value(" "), row(0), col(0)
 Token::~Token()
 { }
 
-Token::Token(Token const &src) : _type(src._type), _value(src._value), row(src.row), col(src.col)
+Token::Token(Token const &src) : _type(src._type), _value(src._value), row(src.row), col(src.col), _numInst(src._numInst)
 {
 	*this = src;
 }
@@ -68,7 +68,6 @@ void Token::deal_instance()
 		auto found = std::find(valueTok.begin(), valueTok.end(), _value);
 		if (found != valueTok.end())
 		{
-			std::cout << found - valueTok.begin() << "< HERE" << std::endl;
 			_numInst = found - valueTok.begin();
 			_type = VALUE;
 			return ;
@@ -78,7 +77,7 @@ void Token::deal_instance()
 			_type = BADINST;
 		else
 			_numInst = found2 - commandTok.begin();
-		std::cout << _numInst << "< HERE in" << std::endl;
+
 	}
 }
 

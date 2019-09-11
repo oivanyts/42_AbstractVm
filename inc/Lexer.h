@@ -9,6 +9,7 @@
 #include <sstream>
 #include <queue>
 #include "Token.h"
+#include "ErrorMng.h"
 
 class Lexer
 {

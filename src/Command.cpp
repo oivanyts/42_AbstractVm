@@ -115,6 +115,10 @@ void Command::setFunc(Token tok)
 		{
 			break ;
 		}
+		case COMNT:
+		{
+			break ;
+		}
 		default :
 			throw std::invalid_argument("Token fail");
 

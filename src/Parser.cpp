@@ -36,9 +36,10 @@ Parser::Parser(std::queue<Token *> a)
 	Token *tmpTok;
 	while (!a.empty())
 	{
-		comands.push(new Command);
 		try
 		{
+			if (a.front()->getType() != ENDL)
+				comands.push(new Command);
 			while (!a.empty() && a.front()->getType() != ENDL)
 			{
 				tmpTok = a.front();
@@ -50,8 +51,8 @@ Parser::Parser(std::queue<Token *> a)
 		}
 		catch (std::invalid_argument &e)
 		{
-			std::cout << "SYNTAX ERROR : " << e.what() << std::endl;
-			while (!a.empty())
+			std::cout << "Syntax ERROR: " << e.what() << std::endl;
+			if (!a.empty())
 				a.pop();
 		}
 	}

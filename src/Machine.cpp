@@ -38,12 +38,15 @@ void Machine::fAssert(eOperandType type, std::string const &value)
 
 void Machine::fPop(eOperandType , std::string const &)
 {
-
+	VM.pop_front();
 }
 
 void Machine::fDump(eOperandType, std::string const &)
 {
-
+	for (auto dequeIterator = VM.begin(); dequeIterator != VM.end(); ++dequeIterator)
+	{
+		std::cout << (*dequeIterator)->toString() << std::endl;
+	}
 }
 
 void Machine::fAdd(eOperandType , std::string const &)
@@ -131,6 +134,7 @@ void Machine::func(int num, eOperandType type, std::string const &value)
 			&Machine::fPrint,
 			&Machine::fExit
 	};
+	std::cout << "operation "<< num << std::endl;
 	(this->*(tmp[num]))(type, value);
 }
 

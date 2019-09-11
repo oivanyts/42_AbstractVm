@@ -13,7 +13,7 @@ eType Lexer::stateTable[10][10] = {
 	{ FLOAT, 	REJECT,	REJECT,	REJECT,		FLOAT,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
 	{ ENDL,		REJECT,	REJECT,	REJECT,		REJECT,	REJECT, ENDL,	REJECT, REJECT,	REJECT},
 	{ SPACE,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	SPACE,	REJECT, REJECT},
-	{ COMNT,	COMNT,	COMNT,	COMNT,		COMNT,	COMNT,	COMNT,	REJECT,	COMNT,	REJECT},
+	{ COMNT,	COMNT,	COMNT,	COMNT,		COMNT,	COMNT,	REJECT,	COMNT,	COMNT,	COMNT},
 	{ SIGN,		REJECT,	REJECT,	REJECT,		NUMBER,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
 };
 
@@ -44,10 +44,7 @@ Lexer &Lexer::operator=(Lexer const &rhs)
 
 Lexer::Lexer(std::stringstream &sorce) : _raw(sorce.str())
 {
-	for (auto wrapIter = _raw.begin(); wrapIter != _raw.end(); ++wrapIter)
-	{
-		
-	}
+
 	runFile();
 }
 
@@ -85,7 +82,7 @@ void Lexer::runFile()
 			_location++;
 		}
 		if (currTok == ";;")
-			break ;
+			return ;
 	}
 	_tokQue.push(new Token(currTok, _location, old));
 }
