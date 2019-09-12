@@ -4,24 +4,22 @@
 
 #include "ErrorMng.h"
 
-ErrorMng::ErrorMng()
+ErrorMng::ErrorMng() noexcept
 {
-
+	outLine = "ERROR OCCURRED ";
 }
 
-ErrorMng::~ErrorMng()
+const char *SyntaxErr::what() const noexcept
 {
-
+	return outLine.c_str();
 }
 
-ErrorMng::ErrorMng(ErrorMng const &src)
+SyntaxErr::SyntaxErr(std::string const &src)
 {
-	*this = src;
+	outLine += src;
 }
 
-ErrorMng &ErrorMng::operator=(ErrorMng const &rhs)
+const char *NoExitFound::what() const noexcept
 {
-	if (&rhs != this)
-	{}
-	return *this;
+	return "Exit not foud";
 }

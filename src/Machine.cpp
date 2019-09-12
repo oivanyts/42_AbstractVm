@@ -2,6 +2,7 @@
 // Created by Oleh IVANYTSKYI on 2019-08-20.
 //
 
+#include <ErrorMng.h>
 #include "Machine.h"
 
 Machine::Machine()
@@ -134,7 +135,6 @@ void Machine::func(int num, eOperandType type, std::string const &value)
 			&Machine::fPrint,
 			&Machine::fExit
 	};
-	std::cout << "operation "<< num << std::endl;
 	(this->*(tmp[num]))(type, value);
 }
 
@@ -149,12 +149,20 @@ Machine::Machine(std::queue<Command *> &com) : exitFound(false)
 		}
 		if (!exitFound)
 		{
-			throw std::invalid_argument("EXIT NOT FOUND");
+			throw NoExitFound();
 		}
-		fPrint(eInt16, "");
+//		fPrint(eInt16, "");
 	}
-	catch (std::invalid_argument &e)
+	catch (SyntaxErr &e)
 	{
-		std::cout << "ERROR OP " << e.what();
+		std::cout << e.what() << std::endl;
+	}
+	catch (NoExitFound &e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	catch (...)
+	{
+		std::cout << "unknown exception" << std::endl;
 	}
 }

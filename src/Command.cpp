@@ -2,6 +2,7 @@
 // Created by Oleh IVANYTSKYI on 2019-08-16.
 //
 
+#include <ErrorMng.h>
 #include "Command.h"
 
 Command::Command() : ints(-1), status(statCom::ERROR)
@@ -120,7 +121,7 @@ void Command::setFunc(Token tok)
 			break ;
 		}
 		default :
-			throw std::invalid_argument("Token fail");
+			throw SyntaxErr("Unknown token");
 
 	}
 }

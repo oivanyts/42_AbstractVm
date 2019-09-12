@@ -29,8 +29,6 @@ private:
 	static eType stateTable[10][10];
 
 	eType findType(const char &i) const;
-
-	void printAllTok();
 };
 
 

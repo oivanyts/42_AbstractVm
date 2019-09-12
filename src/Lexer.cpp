@@ -44,7 +44,6 @@ Lexer &Lexer::operator=(Lexer const &rhs)
 
 Lexer::Lexer(std::stringstream &sorce) : _raw(sorce.str())
 {
-
 	runFile();
 }
 
@@ -108,16 +107,6 @@ eType Lexer::findType(const char &i) const
 	else if (std::isspace(i))
 		return SPACE;
 	return REJECT;
-}
-
-void Lexer::printAllTok()
-{
-	while (!_tokQue.empty())
-	{
-		_tokQue.front()->printTok();
-		_tokQue.pop();
-	}
-
 }
 
 const std::queue<Token *> &Lexer::getTokQue() const

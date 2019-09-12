@@ -30,8 +30,16 @@ int main(int ac, char *av[]) {
 			buffer << line << '\n';
 		}
 	}
-	Lexer         lex(buffer);
-	Parser        parse(lex.getTokQue());
-	Machine       main(parse.getComands());
+	try
+	{
+		Lexer         lex(buffer);
+		Parser        parse(lex.getTokQue());
+		Machine       main(parse.getComands());
+	}
+	catch (...)
+	{
+		std::cout << "" << std::endl;
+	}
+
 	return 0;
 }

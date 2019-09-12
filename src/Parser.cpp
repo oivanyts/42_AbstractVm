@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <ErrorMng.h>
 #include "Parser.h"
 
 eType commandLine[] = {VALUE, OPENBR, NUMBER, CLOSEBR, ENDL};
@@ -49,7 +50,7 @@ Parser::Parser(std::queue<Token *> a)
 			if (!a.empty())
 				a.pop();
 		}
-		catch (std::invalid_argument &e)
+		catch (SyntaxErr &e)
 		{
 			std::cout << "Syntax ERROR: " << e.what() << std::endl;
 			if (!a.empty())
@@ -73,29 +74,3 @@ std::queue<Command *> & Parser::getComands()
 {
 	return comands;
 }
-
-//void Parser::dealLong(std::queue<Token *> queue)
-//{
-//	if (queue.front()->getType() == VALUE)
-//	{
-//		std::cout << queue.front()->getValue();
-//		queue.pop();
-//	}
-//	else
-//	{
-//		throw std::invalid_argument("BAD VALUE TYPE");
-//	}
-//}
-
-//void Parser::dealShort(std::queue<Token *> queue)
-//{
-//	if (queue.front()->getType() == ENDL)
-//	{
-//		queue.pop();
-//	}
-//	else
-//	{
-//		throw std::invalid_argument("BAD VALUE TYPE");
-//	}
-//
-//}
