@@ -32,7 +32,7 @@ Parser &Parser::operator=(Parser const &rhs)
 	return *this;
 }
 
-Parser::Parser(std::queue<Token *> a)
+Parser::Parser(std::queue<Token *> a) : errFound(false)
 {
 	Token *tmpTok;
 	while (!a.empty())
@@ -52,7 +52,8 @@ Parser::Parser(std::queue<Token *> a)
 		}
 		catch (SyntaxErr &e)
 		{
-			std::cout << "Syntax ERROR: " << e.what() << std::endl;
+			std::cout << e.what() << std::endl;
+			errFound = true;
 			if (!a.empty())
 				a.pop();
 		}

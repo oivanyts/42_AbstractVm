@@ -33,18 +33,20 @@ void Machine::fPush(eOperandType type, std::string const &value)
 
 void Machine::fAssert(eOperandType type, std::string const &value)
 {
-	(void)type;
-	(void)value;
+	// empty stack err
+	if (VM.back()->getType() != type || VM.back()->toString() != value)
+		throw RuntimeErr("Assert fails");
 }
 
 void Machine::fPop(eOperandType , std::string const &)
 {
-	VM.pop_front();
+	VM.pop_back();
+	// empty stack err
 }
 
 void Machine::fDump(eOperandType, std::string const &)
 {
-	for (auto dequeIterator = VM.begin(); dequeIterator != VM.end(); ++dequeIterator)
+	for (auto dequeIterator = VM.rbegin(); dequeIterator != VM.rend(); ++dequeIterator)
 	{
 		std::cout << (*dequeIterator)->toString() << std::endl;
 	}
@@ -108,10 +110,12 @@ void Machine::fMod(eOperandType, std::string const &)
 
 void Machine::fPrint(eOperandType, std::string const &)
 {
-	for (auto dequeIterator = VM.begin(); dequeIterator != VM.end(); ++dequeIterator)
+	if (VM.back()->getType() == eInt8)
 	{
-		std::cout << (*dequeIterator)->toString() << std::endl;
+		std::cout << VM.back()->toString() << std::endl;
 	}
+	else
+		throw RuntimeErr("bad type to print");
 }
 
 void Machine::fExit(eOperandType, std::string const &)
@@ -151,7 +155,6 @@ Machine::Machine(std::queue<Command *> &com) : exitFound(false)
 		{
 			throw NoExitFound();
 		}
-//		fPrint(eInt16, "");
 	}
 	catch (SyntaxErr &e)
 	{
@@ -163,6 +166,6 @@ Machine::Machine(std::queue<Command *> &com) : exitFound(false)
 	}
 	catch (...)
 	{
-		std::cout << "unknown exception" << std::endl;
+		throw ;
 	}
 }

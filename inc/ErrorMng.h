@@ -46,5 +46,16 @@ public:
 	const char *what() const noexcept;
 };
 
+class RuntimeErr : public ErrorMng
+{
+
+public:
+	RuntimeErr() noexcept {};
+	RuntimeErr(RuntimeErr const &src) = default;
+	RuntimeErr(std::string const &src);
+	RuntimeErr &operator=(RuntimeErr const &rhs) = default;
+	~RuntimeErr() = default;
+	const char *what() const noexcept;
+};
 
 #endif //ERRORMNG_H

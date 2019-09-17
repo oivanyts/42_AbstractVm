@@ -38,7 +38,7 @@ void Command::setNum(const std::string &number)
 	else
 	{
 		status = statCom::BR;
-		throw std::invalid_argument("bad number");
+		throw SyntaxErr("command fail ");
 	}
 }
 
@@ -52,7 +52,7 @@ void Command::setValue(int val)
 	else
 	{
 		status = statCom::BROP;
-		throw std::invalid_argument("bad value");
+		throw SyntaxErr("command fail");
 	}
 }
 
@@ -63,7 +63,7 @@ void Command::setStatusBr(bool open)
 	else if (!open && status == statCom::BR && this->ints < 2)
 		status = statCom::ENDLINE;
 	else
-		throw std::invalid_argument("BRACKET PROBLEM");
+		throw SyntaxErr("bracked fail");
 }
 
 void Command::setInts(int instance)
@@ -74,7 +74,7 @@ void Command::setInts(int instance)
 		status = (ints) < 2 ? statCom::VALUE : statCom::ENDLINE;
 	}
 	else
-		throw std::invalid_argument("Bad instance");
+		throw SyntaxErr("Bad instance");
 }
 
 void Command::setFunc(Token tok)

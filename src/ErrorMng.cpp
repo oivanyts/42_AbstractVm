@@ -6,7 +6,11 @@
 
 ErrorMng::ErrorMng() noexcept
 {
-	outLine = "ERROR OCCURRED ";
+	outLine = "ERROR";
+}
+const char *ErrorMng::what() const noexcept
+{
+	return outLine.c_str();
 }
 
 const char *SyntaxErr::what() const noexcept
@@ -16,10 +20,19 @@ const char *SyntaxErr::what() const noexcept
 
 SyntaxErr::SyntaxErr(std::string const &src)
 {
-	outLine += src;
+	outLine = "SYNTAX " + src;
 }
 
 const char *NoExitFound::what() const noexcept
 {
 	return "Exit not foud";
+}
+
+RuntimeErr::RuntimeErr(std::string const &src)
+{
+	outLine += " [RUNTIME]: " + src;
+}
+const char *RuntimeErr::what() const noexcept
+{
+	return outLine.c_str();
 }
