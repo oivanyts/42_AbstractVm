@@ -48,30 +48,32 @@ Parser::Parser(std::queue<Token *> a) : errFound(false)
 				a.pop();
 			}
 			if (!a.empty())
+			{
 				a.pop();
+			}
 		}
 		catch (SyntaxErr &e)
 		{
 			std::cout << e.what() << std::endl;
 			errFound = true;
-			if (!a.empty())
-				a.pop();
+			skipTokens(&a);
 		}
 	}
-}
-
-void Parser::prQue()
-{
-	while (!comands.empty())
-	{
-		std::cout << comands.front()->getInts() << " inst " <<
-		comands.front()->getValue() << " value " <<
-		comands.front()->getNum() << " num\n";
-		comands.pop();
-	}
+	if (errFound)
+		throw SyntaxErr();
 }
 
 std::queue<Command *> & Parser::getComands()
 {
 	return comands;
+}
+
+void Parser::skipTokens(std::queue<Token *> *queue)
+{
+	while (!queue->empty() && queue->front()->getType() != ENDL)
+	{
+		Token	*tmp = queue->front();
+		queue->pop();
+		delete(tmp);
+	}
 }

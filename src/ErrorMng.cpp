@@ -6,7 +6,7 @@
 
 ErrorMng::ErrorMng() noexcept
 {
-	outLine = "ERROR";
+	
 }
 const char *ErrorMng::what() const noexcept
 {

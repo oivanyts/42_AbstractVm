@@ -1,0 +1,11 @@
+push int8(-3)
+push int32(123123123)
+push int16(2223)
+add
+mul
+push float(1.4)
+dump
+div
+dump
+pop
+exit 1

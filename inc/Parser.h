@@ -21,13 +21,13 @@ public:
 	Parser(Parser const &src);
 
 	Parser &operator=(Parser const &rhs);
-	void prQue();
 	std::queue<Command *> & getComands();
 
 private:
 	std::queue<Command *>	comands;
 	bool					errFound;
 
+	void skipTokens(std::queue<Token *> *queue);
 };
 
 

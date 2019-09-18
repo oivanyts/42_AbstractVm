@@ -36,13 +36,13 @@ int main(int ac, char *av[]) {
 		Parser        parse(lex.getTokQue());
 		Machine       main(parse.getComands());
 	}
-	catch (RuntimeErr &e)
+	catch (ErrorMng &e)
 	{
 		std::cout << e.what() << std::endl;
 	}
 	catch (...)
 	{
-		std::cout << "Unknown" << std::endl;
+		std::cout << "Unknown error" << std::endl;
 	}
 
 	return 0;
