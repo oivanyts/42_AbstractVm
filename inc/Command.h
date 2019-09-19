@@ -45,6 +45,7 @@ public:
 	statCom getStatus() const;
 
 private:
+	Token			*curr;
 	int				ints;
 	int 			value;
 	std::string 	num;

@@ -52,7 +52,7 @@ Parser::Parser(std::queue<Token *> a) : errFound(false)
 				a.pop();
 			}
 		}
-		catch (SyntaxErr &e)
+		catch (ErrorMng &e)
 		{
 			std::cout << e.what() << std::endl;
 			errFound = true;
@@ -70,10 +70,13 @@ std::queue<Command *> & Parser::getComands()
 
 void Parser::skipTokens(std::queue<Token *> *queue)
 {
+	std::cout << ">>";
 	while (!queue->empty() && queue->front()->getType() != ENDL)
 	{
-		Token	*tmp = queue->front();
+		Token	*tmp = queue->front() ;
+		std::cout << queue->front()->getValue() << " ";
 		queue->pop();
 		delete(tmp);
 	}
+	std::cout << std::endl;
 }

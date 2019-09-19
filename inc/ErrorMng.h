@@ -17,7 +17,7 @@ public:
 	ErrorMng(ErrorMng const &src) = default;
 	ErrorMng &operator=(ErrorMng const &rhs) = default;
 	virtual ~ErrorMng() = default;
-	virtual const char *what() const noexcept = 0;
+	const char *what() const noexcept;
 
 protected:
 	std::string outLine;
@@ -32,7 +32,17 @@ public:
 	SyntaxErr(std::string const &src);
 	SyntaxErr &operator=(SyntaxErr const &rhs) = default;
 	~SyntaxErr() = default;
-	const char *what() const noexcept;
+};
+
+class LexErr : public ErrorMng
+{
+
+public:
+	LexErr() noexcept = default;
+	LexErr(LexErr const &src) = default;
+	LexErr(std::string const &src);
+	LexErr &operator=(LexErr const &rhs) = default;
+	~LexErr() = default;
 };
 
 class NoExitFound : public ErrorMng

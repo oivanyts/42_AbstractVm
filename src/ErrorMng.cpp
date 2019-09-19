@@ -13,14 +13,9 @@ const char *ErrorMng::what() const noexcept
 	return outLine.c_str();
 }
 
-const char *SyntaxErr::what() const noexcept
-{
-	return outLine.c_str();
-}
-
 SyntaxErr::SyntaxErr(std::string const &src)
 {
-	outLine = "SYNTAX " + src;
+	outLine = "Syntax error: " + src;
 }
 
 const char *NoExitFound::what() const noexcept
@@ -30,9 +25,14 @@ const char *NoExitFound::what() const noexcept
 
 RuntimeErr::RuntimeErr(std::string const &src)
 {
-	outLine += " [RUNTIME]: " + src;
+	outLine += "Runtime error:" + src;
 }
 const char *RuntimeErr::what() const noexcept
 {
 	return outLine.c_str();
+}
+
+LexErr::LexErr(std::string const &src)
+{
+	outLine = "Lexical error:" + src;
 }

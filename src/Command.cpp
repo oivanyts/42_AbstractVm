@@ -35,10 +35,14 @@ void Command::setNum(const std::string &number)
 		status = statCom::BR;
 		this->num = number;
 	}
+	else if (status != statCom::NUM)
+	{
+		std::string ret("TOKEN BAD at "  + curr->getLocation());
+		throw SyntaxErr(ret);
+	}
 	else
 	{
-		status = statCom::BR;
-		throw SyntaxErr("command fail ");
+		throw LexErr("");
 	}
 }
 
@@ -51,8 +55,7 @@ void Command::setValue(int val)
 	}
 	else
 	{
-		status = statCom::BROP;
-		throw SyntaxErr("command fail");
+		throw SyntaxErr("bad place for value");
 	}
 }
 
@@ -63,7 +66,9 @@ void Command::setStatusBr(bool open)
 	else if (!open && status == statCom::BR && this->ints < 2)
 		status = statCom::ENDLINE;
 	else
-		throw SyntaxErr("bracked fail");
+	{
+		throw SyntaxErr(open ? "open bracket expected" : "closed bracket expected");
+	}
 }
 
 void Command::setInts(int instance)
@@ -74,11 +79,14 @@ void Command::setInts(int instance)
 		status = (ints) < 2 ? statCom::VALUE : statCom::ENDLINE;
 	}
 	else
-		throw SyntaxErr("Bad instance");
+	{
+		throw SyntaxErr("bad place for instance");
+	}
 }
 
 void Command::setFunc(Token tok)
 {
+	curr = &tok;
 	tok.printTok();
 	switch (tok.getType())
 	{
@@ -121,7 +129,9 @@ void Command::setFunc(Token tok)
 			break ;
 		}
 		default :
-			throw SyntaxErr("Unknown token");
+		{
+			throw LexErr("Unknown token");
+		}
 
 	}
 }

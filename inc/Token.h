@@ -38,16 +38,17 @@ public:
 	eType getType() const;
 	int getNumInst() const;
 	const std::string &getValue() const;
-
+	const std::string getLocation();
+	static std::string	tokType[12];
 private:
 
 	eType 				_type;
 	std::string	const	_value;
-	int const 			row;
 	int const 			col;
+	int const 			row;
 	int					_numInst;
 	static int			endl_counter;
-	static std::string	tokType[12];
+
 	void				deal_instance();
 };
 
