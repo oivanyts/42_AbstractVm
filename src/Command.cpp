@@ -87,7 +87,7 @@ void Command::setInts(int instance)
 void Command::setFunc(Token tok)
 {
 	curr = &tok;
-	tok.printTok();
+//	tok.printTok();
 	switch (tok.getType())
 	{
 		case INST :
@@ -130,7 +130,7 @@ void Command::setFunc(Token tok)
 		}
 		default :
 		{
-			throw LexErr("Unknown token");
+			throw LexErr(" Unknown token at " + curr->getLocation());
 		}
 
 	}

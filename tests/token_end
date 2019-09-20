@@ -1,11 +1,11 @@
+assert int8(1)
 push int8(-3)
-push int32(123123123)
-push int16(2223)
+push int32(123123121233)
+push int16(212)
 add
-mul
+sub
 push float(1.4)
 dump
-div
+div dump pop
+exit
 dump
-pop
-exit 1

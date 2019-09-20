@@ -3,6 +3,7 @@
 //
 
 #include <ErrorMng.h>
+#include <sstream>
 #include "Machine.h"
 
 Machine::Machine()
@@ -33,9 +34,10 @@ void Machine::fPush(eOperandType type, std::string const &value)
 
 void Machine::fAssert(eOperandType type, std::string const &value)
 {
-	// empty stack err
+	if (VM.empty())
+		throw RuntimeErr(" asserted empty stack");
 	if (VM.back()->getType() != type || VM.back()->toString() != value)
-		throw RuntimeErr("Assert fails");
+		throw RuntimeErr(" Assert fails");
 }
 
 void Machine::fPop(eOperandType , std::string const &)
@@ -112,7 +114,7 @@ void Machine::fPrint(eOperandType, std::string const &)
 {
 	if (VM.back()->getType() == eInt8)
 	{
-		std::cout << VM.back()->toString() << std::endl;
+		std::cout << static_cast<int8_t>(std::stoi((VM.back()->toString()))) << std::endl;
 	}
 	else
 		throw RuntimeErr("bad type to print");

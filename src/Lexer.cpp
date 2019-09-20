@@ -53,7 +53,7 @@ void Lexer::runFile()
 	std::string		currTok;
 	int 			_location = 0;
 
-	std::cout << _raw;
+//	std::cout << _raw;
 	
 	for (auto wrapIter = &(_raw)[0]; *wrapIter != '\0'; wrapIter++)
 	{

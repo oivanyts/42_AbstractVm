@@ -6,11 +6,12 @@ push int32(33)
 add
 push float(44.55)
 mul
-apush double(42.42)
-push int32(42)
+push double(42.42)
+push int8(42)
 print
 dump
 pop
 
-assert double( 42.42 )
+
+assert double( 42.42)
 exit

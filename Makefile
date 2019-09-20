@@ -2,6 +2,7 @@ NAME 		    = abstractVm
 
 SRC             +=Command.cpp
 SRC             +=Creator.cpp
+SRC             +=ErrorMng.cpp
 SRC             +=Lexer.cpp
 SRC             +=Machine.cpp
 SRC             +=main.cpp
