@@ -4,6 +4,8 @@
 
 #include "ErrorMng.h"
 
+#define WHITE "\033[0m"
+#define RED_TEXT  "\033[1;31m"
 ErrorMng::ErrorMng() noexcept
 {
 	
@@ -15,24 +17,25 @@ const char *ErrorMng::what() const noexcept
 
 SyntaxErr::SyntaxErr(std::string const &src)
 {
-	outLine = "Syntax error: " + src;
+	outLine = "\033[1;31m Syntax error: \033[0m" + src;
 }
 
 const char *NoExitFound::what() const noexcept
 {
-	return "Exit not foud";
+	return "\033[1;31m Runtime error: \033[0m Exit not foud";
 }
 
 RuntimeErr::RuntimeErr(std::string const &src)
 {
-	outLine += "Runtime error:" + src;
-}
-const char *RuntimeErr::what() const noexcept
-{
-	return outLine.c_str();
+	outLine += "\033[1;31m Runtime error: \033[0m" + src;
 }
 
 LexErr::LexErr(std::string const &src)
 {
-	outLine = "Lexical error:" + src;
+	outLine = "\033[1;31m Lexical error: \033[0m" + src;
+}
+
+const char *GotExit::what() const noexcept
+{
+	return "";
 }

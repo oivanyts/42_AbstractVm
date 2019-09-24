@@ -1,11 +1,12 @@
-assert int8(1)
-push int8(-3)
-push int32(123123121233)
-push int16(212)
+push int32(42)
+push int8(33)
 add
-sub
-push float(1.4)
+push float(44.55)
+mul
+push double(42.42)
+push int8(42)
+print
 dump
-div dump pop
+pop
 exit
-dump
+end

@@ -5,6 +5,8 @@
 #include <ErrorMng.h>
 #include "Command.h"
 
+
+
 Command::Command() : ints(-1), status(statCom::ERROR)
 { }
 
@@ -32,6 +34,11 @@ void Command::setNum(const std::string &number)
 {
 	if (this->ints < 2 && status == statCom::NUM)
 	{
+		if ((value < 3 && curr->getType() == FLOAT) || (value >= 3 && curr->getType() == NUMBER))
+		{
+			std::string ret("BAD NUMBER TYPE at "  + curr->getLocation());
+			throw SyntaxErr(ret);
+		}
 		status = statCom::BR;
 		this->num = number;
 	}
@@ -87,7 +94,7 @@ void Command::setInts(int instance)
 void Command::setFunc(Token tok)
 {
 	curr = &tok;
-//	tok.printTok();
+	tok.printTok();
 	switch (tok.getType())
 	{
 		case INST :
@@ -132,7 +139,6 @@ void Command::setFunc(Token tok)
 		{
 			throw LexErr(" Unknown token at " + curr->getLocation());
 		}
-
 	}
 }
 

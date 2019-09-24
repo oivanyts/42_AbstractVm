@@ -52,7 +52,7 @@ void Token::printTok() const
 	row << ":" << col << std::endl;
 }
 
-Token::Token(std::string str, int place, eType curr) : _type(curr), _value(str),  col(place - str.size()), row(Token::endl_counter)
+Token::Token(std::string str, int place, eType curr) : _type(curr), _value(str),  col(place - str.size() + 1), row(Token::endl_counter + 1)
 {
 	deal_instance();
 	if (_type == ENDL)
@@ -77,7 +77,6 @@ void Token::deal_instance()
 			_type = BADINST;
 		else
 			_numInst = found2 - commandTok.begin();
-
 	}
 }
 

@@ -46,6 +46,7 @@ Parser::Parser(std::queue<Token *> a) : errFound(false)
 				tmpTok = a.front();
 				comands.back()->setFunc(*tmpTok);
 				a.pop();
+				delete(tmpTok);
 			}
 			if (!a.empty())
 			{
@@ -70,13 +71,12 @@ std::queue<Command *> & Parser::getComands()
 
 void Parser::skipTokens(std::queue<Token *> *queue)
 {
-	std::cout << ">>";
+	std::cout << ">> " << queue->front()->getValue() ;
 	while (!queue->empty() && queue->front()->getType() != ENDL)
 	{
-		Token	*tmp = queue->front() ;
-		std::cout << queue->front()->getValue() << " ";
+//		Token	*tmp = queue->front() ;
 		queue->pop();
-		delete(tmp);
+//		delete(tmp);
 	}
 	std::cout << std::endl;
 }

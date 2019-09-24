@@ -14,4 +14,12 @@ enum  eOperandType {
 	eDouble
 };
 
+const std::string	TypeName[5]{
+	"Int8",
+	"Int16",
+	"Int32",
+	"Float",
+	"Double"
+};
+
 #endif //MAIN_H

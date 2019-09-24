@@ -36,8 +36,8 @@ void Machine::fAssert(eOperandType type, std::string const &value)
 {
 	if (VM.empty())
 		throw RuntimeErr(" asserted empty stack");
-	if (VM.back()->getType() != type || VM.back()->toString() != value)
-		throw RuntimeErr(" Assert fails");
+	if (VM.back()->getType() != type || VM.back() == factory.createOperand(type, value))
+		throw RuntimeErr(" Assert fails " + VM.back()->toString());
 }
 
 void Machine::fPop(eOperandType , std::string const &)

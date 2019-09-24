@@ -7,6 +7,7 @@
 
 #include "IOperand.h"
 #include "Creator.h"
+#include "ErrorMng.h"
 #include <string>
 #include <sstream>
 #include <cmath>
@@ -26,10 +27,23 @@ public:
 		{
 			int ret1;
 			tmp >> ret1;
+			if (ret1 > std::numeric_limits<T>::max())
+				throw RuntimeErr("Overflow " + basicString);
+			else if (ret1 < std::numeric_limits<T>::min())
+				throw RuntimeErr("Underflow " + basicString);
 			ret = static_cast<T>(ret1);
 			return (ret);
 		}
 		tmp >> ret;
+		if (!tmp.eof() || tmp.fail())
+		{
+			T lng;
+			tmp >> lng;
+			if (lng > std::numeric_limits<T>::max())
+				throw RuntimeErr("Overflow " + basicString);
+			else if (lng < std::numeric_limits<T>::min())
+				throw RuntimeErr("Underflow " + basicString);
+		}
 		return ret;
 	}
 
@@ -44,9 +58,8 @@ public:
 	inline eOperandType setType(double)
 		{ return eDouble; }
 
-
 	TOperant(std::string const &value)
-		: _number(toNum(value)), _type(setType(_number)), _str(value) {};
+		: _number(toNum(value)), _type(setType(_number)), _str(std::to_string(_number)) {};
 	~TOperant() {};
 	TOperant(TOperant const &src) { (void)src; }; //
 	TOperant &operator=(TOperant const &rhs) { (void)rhs; }; //
@@ -59,61 +72,66 @@ public:
 	{
 		Creator			ret;
 		eOperandType	type = std::max(this->_type, rhs.getType());
+		long double		num = _number + std::stod(rhs.toString());
 
-		//exeption managment
-		return type < eFloat
-			? ret.createOperand(type, std::to_string(_number + std::stoi(rhs.toString())))
-			: ret.createOperand(type, std::to_string(_number + std::stod(rhs.toString())));
+		return ret.createOperand(type, std::to_string((num)));
 	}
 
 	const IOperand *operator-(IOperand const &rhs) const override
 	{
 		Creator			ret;
 		eOperandType	type = std::max(this->_type, rhs.getType());
-		//exeption managment
-		return type < eFloat
-			   ? ret.createOperand(type, std::to_string(_number - std::stoi(rhs.toString())))
-			   : ret.createOperand(type, std::to_string(_number - std::stod(rhs.toString())));
+		long double		num = _number - std::stod(rhs.toString());
+
+		return ret.createOperand(type, std::to_string((num)));
 	}
 
 	const IOperand *operator*(IOperand const &rhs) const override
 	{
 		Creator			ret;
 		eOperandType	type = std::max(this->_type, rhs.getType());
-		//exeption managment
-		return type < eFloat
-			   ? ret.createOperand(type, std::to_string(_number * std::stoi(rhs.toString())))
-			   : ret.createOperand(type, std::to_string(_number * std::stod(rhs.toString())));
+		long double		num = _number * std::stod(rhs.toString());
+
+		return ret.createOperand(type, std::to_string((num)));
 	}
 
 	const IOperand *operator/(IOperand const &rhs) const override
 	{
 		Creator			ret;
 		eOperandType	type = std::max(this->_type, rhs.getType());
-		//exeption managment
-		return type < eFloat
-			   ? ret.createOperand(type, std::to_string(_number / std::stoi(rhs.toString())))
-			   : ret.createOperand(type, std::to_string(_number / std::stod(rhs.toString())));
+		if (std::stod(rhs.toString()) == 0.0)
+		{
+			throw RuntimeErr("Division by 0");
+		}
+		long double		num = _number / std::stod(rhs.toString());
+
+		return ret.createOperand(type, std::to_string((num)));
 	}
 
 	const IOperand *operator%(IOperand const &rhs) const override
 	{
 		Creator			ret;
 		eOperandType	type = std::max(this->_type, rhs.getType());
-		//exeption managment
-		return type < eFloat
-			   ? ret.createOperand(type, std::to_string(std::fmod(_number, std::stoi(rhs.toString()))))
-			   : ret.createOperand(type, std::to_string(std::fmod(_number, std::stod(rhs.toString()))));
+		if (std::stod(rhs.toString()) == 0.0)
+		{
+			throw RuntimeErr("Modulo by 0");
+		}
+		long double		num = fmod(_number , std::stod(rhs.toString()));
+
+		return ret.createOperand(type, std::to_string((num)));
 	}
 
+	inline bool operator==(const IOperand & lhs, const IOperand& rhs) { return true; };
+
 	const std::string &toString(void) const override
-	{ return _str; }
+	{
+		return _str;
+	}
 
 private:
 	T	const				_number;
-	int 					bit = 0b10001;
 	eOperandType const	 	_type;
-	std::string const 		_str;
+	std::string const		_str;
 };
 
 #endif //ABSTRACTVM_TOPERANT_H

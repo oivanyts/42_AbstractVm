@@ -49,13 +49,22 @@ class NoExitFound : public ErrorMng
 {
 
 public:
-	NoExitFound() noexcept {};
+	NoExitFound() noexcept  = default;
 	NoExitFound(NoExitFound const &src) = default;
 	NoExitFound &operator=(NoExitFound const &rhs) = default;
 	~NoExitFound() = default;
 	const char *what() const noexcept;
 };
 
+class GotExit : public std::exception
+{
+public:
+	GotExit() noexcept  = default;
+	GotExit(GotExit const &src) = default;
+	GotExit &operator=(GotExit const &rhs) = default;
+	~GotExit() = default;
+	const char *what() const noexcept;
+};
 class RuntimeErr : public ErrorMng
 {
 
@@ -65,7 +74,6 @@ public:
 	RuntimeErr(std::string const &src);
 	RuntimeErr &operator=(RuntimeErr const &rhs) = default;
 	~RuntimeErr() = default;
-	const char *what() const noexcept;
 };
 
 #endif //ERRORMNG_H
