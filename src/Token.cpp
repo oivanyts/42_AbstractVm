@@ -20,7 +20,7 @@ int Token::endl_counter = 0;
 
 std::vector<std::string> commandTok = {
 		"push", "assert", "pop", "dump", "add", "sub", "mul",
-		"div", "mod", "print", "exit", "bad instance"};
+		"div", "mod", "print","pow","sqrt", "exit", "bad instance"};
 
 std::vector<std::string> valueTok = {
 		"int8", "int16", "int32", "float", "double"

@@ -4,8 +4,6 @@
 
 #include "ErrorMng.h"
 
-#define WHITE "\033[0m"
-#define RED_TEXT  "\033[1;31m"
 ErrorMng::ErrorMng() noexcept
 {
 	

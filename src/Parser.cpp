@@ -39,23 +39,31 @@ Parser::Parser(std::queue<Token *> a) : errFound(false)
 	{
 		try
 		{
+			tmpTok = a.front();
 			if (a.front()->getType() != ENDL)
 				comands.push(new Command);
-			while (!a.empty() && a.front()->getType() != ENDL)
+			else
+			{
+				a.pop();
+				delete(tmpTok);
+				continue ;
+			}
+			while (!a.empty())
 			{
 				tmpTok = a.front();
 				comands.back()->setFunc(*tmpTok);
 				a.pop();
 				delete(tmpTok);
 			}
-			if (!a.empty())
-			{
-				a.pop();
-			}
+		}
+		catch (GoodCommand &)
+		{
+			skipTokens(&a);
 		}
 		catch (ErrorMng &e)
 		{
 			std::cout << e.what() << std::endl;
+			std::cout << ">> " << a.front()->getValue() ;
 			errFound = true;
 			skipTokens(&a);
 		}
@@ -71,12 +79,11 @@ std::queue<Command *> & Parser::getComands()
 
 void Parser::skipTokens(std::queue<Token *> *queue)
 {
-	std::cout << ">> " << queue->front()->getValue() ;
-	while (!queue->empty() && queue->front()->getType() != ENDL)
+	while (queue->front()->getType() != ENDL)
 	{
 //		Token	*tmp = queue->front() ;
 		queue->pop();
 //		delete(tmp);
 	}
-	std::cout << std::endl;
+	queue->pop();
 }

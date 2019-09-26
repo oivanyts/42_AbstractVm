@@ -5,18 +5,8 @@
 #include <ErrorMng.h>
 #include "Command.h"
 
-
-
-Command::Command() : ints(-1), status(statCom::ERROR)
+Command::Command() : ints(-1), status(statCom::ENDLINE)
 { }
-
-Command::~Command()
-{ }
-
-Command::Command(Command const &src)
-{
-	*this = src;
-}
 
 Command &Command::operator=(Command const &rhs)
 {
@@ -34,7 +24,8 @@ void Command::setNum(const std::string &number)
 {
 	if (this->ints < 2 && status == statCom::NUM)
 	{
-		if ((value < 3 && curr->getType() == FLOAT) || (value >= 3 && curr->getType() == NUMBER))
+		if ((value < 3 && curr->getType() == FLOAT)
+		|| (value >= 3 && curr->getType() == NUMBER))
 		{
 			std::string ret("BAD NUMBER TYPE at "  + curr->getLocation());
 			throw SyntaxErr(ret);
@@ -44,12 +35,11 @@ void Command::setNum(const std::string &number)
 	}
 	else if (status != statCom::NUM)
 	{
-		std::string ret("TOKEN BAD at "  + curr->getLocation());
-		throw SyntaxErr(ret);
+		throw SyntaxErr(" at "  + curr->getLocation() + "passed number");
 	}
 	else
 	{
-		throw LexErr("");
+		throw SyntaxErr("TOKEN BAD at "  + curr->getLocation());
 	}
 }
 
@@ -80,14 +70,26 @@ void Command::setStatusBr(bool open)
 
 void Command::setInts(int instance)
 {
-	if (status == statCom::ERROR)
+	if (status == statCom::ENDLINE)
 	{
 		this->ints = instance;
 		status = (ints) < 2 ? statCom::VALUE : statCom::ENDLINE;
 	}
 	else
 	{
-		throw SyntaxErr("bad place for instance");
+		throw SyntaxErr(" at " + curr->getLocation() +"bad place for instance");
+	}
+}
+
+void Command::setEnd()
+{
+	if (status == statCom::ENDLINE)
+	{
+		throw GoodCommand();
+	}
+	else
+	{
+		throw SyntaxErr(" Command is bad");
 	}
 }
 
@@ -97,10 +99,14 @@ void Command::setFunc(Token tok)
 	tok.printTok();
 	switch (tok.getType())
 	{
-		case INST :
+		case INST:
 		{
 			setInts(tok.getNumInst());
 			break ;
+		}
+		case BADINST :
+		{
+			throw SyntaxErr(" at " + curr->getLocation() + " bad instance");
 		}
 		case VALUE :
 		{
@@ -129,7 +135,8 @@ void Command::setFunc(Token tok)
 		}
 		case ENDL :
 		{
-			break ;
+			setEnd();
+			break;
 		}
 		case COMNT:
 		{
@@ -155,9 +162,4 @@ int Command::getValue() const
 const std::string &Command::getNum() const
 {
 	return num;
-}
-
-statCom Command::getStatus() const
-{
-	return status;
 }

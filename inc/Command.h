@@ -10,13 +10,11 @@
 #include "Token.h"
 
 enum class statCom{
-	ERROR = 0,
-	COMMAND,
 	VALUE,
 	BROP,
 	NUM,
 	BR,
-	ENDLINE
+	ENDLINE,
 };
 
 class Command
@@ -24,25 +22,19 @@ class Command
 
 public:
 	Command();
-	~Command();
-
-	Command(Command const &src);
-
+	~Command() = default;
+	Command(Command const &src) = default;
 	Command &operator=(Command const &rhs);
 
-	void setFunc(Token tok);
-	void setStatusBr(bool open);
-	void setValue(int val);
-	void setNum(const std::string &number);
-	void setInts(int instance);
-
-	int getInts() const;
-
-	int getValue() const;
-
+	void	setFunc(Token tok);
+	void	setStatusBr(bool open);
+	void	setValue(int val);
+	void	setNum(const std::string &number);
+	void	setInts(int instance);
+	int		getInts() const;
+	int		getValue() const;
 	const std::string &getNum() const;
 
-	statCom getStatus() const;
 
 private:
 	Token			*curr;
@@ -51,6 +43,7 @@ private:
 	std::string 	num;
 	statCom			status;
 
+	void setEnd();
 };
 
 

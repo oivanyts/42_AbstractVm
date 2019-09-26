@@ -25,6 +25,7 @@ public:
 private:
 	void runFile();
 	const std::string 			_raw;
+	int						_errors;
 	std::queue<Token *>			_tokQue;
 	static eType stateTable[10][10];
 

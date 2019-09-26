@@ -17,7 +17,17 @@ class TOperant : public IOperand
 {
 
 public:
-	TOperant() {};
+	TOperant() = default;
+
+	~TOperant() {};
+
+	TOperant(TOperant const &src) : _number(src._number), _type(src._type),
+									_str(src._str)
+	{	};
+	inline TOperant &operator=(TOperant const &rhs)
+	{
+		return *this;
+	};
 
 	inline const T toNum(const std::string &basicString)
 	{
@@ -28,45 +38,46 @@ public:
 			int ret1;
 			tmp >> ret1;
 			if (ret1 > std::numeric_limits<T>::max())
-				throw RuntimeErr("Overflow " + basicString);
-			else if (ret1 < std::numeric_limits<T>::min())
-				throw RuntimeErr("Underflow " + basicString);
+			throw RuntimeErr("value overflow " + basicString);
+			else if (ret1 < std::numeric_limits<T>::lowest())
+			throw RuntimeErr("value umnderflow " + basicString);
 			ret = static_cast<T>(ret1);
 			return (ret);
 		}
-		tmp >> ret;
+		long double lng = 0;
 		if (!tmp.eof() || tmp.fail())
 		{
-			T lng;
 			tmp >> lng;
 			if (lng > std::numeric_limits<T>::max())
-				throw RuntimeErr("Overflow " + basicString);
-			else if (lng < std::numeric_limits<T>::min())
-				throw RuntimeErr("Underflow " + basicString);
+			throw RuntimeErr("value overflow " + basicString);
+			else if (lng < std::numeric_limits<T>::lowest())
+			throw RuntimeErr("value underflow " + basicString);
 		}
-		return ret;
+		return static_cast<T>(lng);
 	}
 
 	inline eOperandType setType(int8_t)
-		{ return eInt8; }
+	{ return eInt8; }
 	inline eOperandType setType(int16_t)
-		{ return eInt16; }
+	{ return eInt16; }
 	inline eOperandType setType(int32_t)
-		{ return eInt32; }
+	{ return eInt32; }
 	inline eOperandType setType(float)
-		{ return eFloat; }
+	{ return eFloat; }
 	inline eOperandType setType(double)
-		{ return eDouble; }
+	{ return eDouble; }
 
-	TOperant(std::string const &value)
-		: _number(toNum(value)), _type(setType(_number)), _str(std::to_string(_number)) {};
-	~TOperant() {};
-	TOperant(TOperant const &src) { (void)src; }; //
-	TOperant &operator=(TOperant const &rhs) { (void)rhs; }; //
+	TOperant(std::string const &value) : _number(toNum(value)),
+	_type(setType(_number)), _str(std::to_string(_number))
+	{	};
 
-	int getPrecision(void) const override {	return static_cast<int>(getType()); }
 
-	eOperandType getType(void) const override { return _type; }
+	inline int getPrecision(void) const override
+	{
+		return static_cast<int>(getType());
+	}
+
+	inline eOperandType getType(void) const override { return _type; }
 
 	const IOperand *operator+(IOperand const &rhs) const override
 	{
@@ -104,7 +115,6 @@ public:
 			throw RuntimeErr("Division by 0");
 		}
 		long double		num = _number / std::stod(rhs.toString());
-
 		return ret.createOperand(type, std::to_string((num)));
 	}
 
@@ -117,15 +127,40 @@ public:
 			throw RuntimeErr("Modulo by 0");
 		}
 		long double		num = fmod(_number , std::stod(rhs.toString()));
-
 		return ret.createOperand(type, std::to_string((num)));
 	}
 
-	inline bool operator==(const IOperand & lhs, const IOperand& rhs) { return true; };
+	inline bool operator==(IOperand const & rhs) const override
+	{
+		return (rhs.getType() == getType() && toString() == rhs.toString());
+	};
 
-	const std::string &toString(void) const override
+	inline bool operator!=(IOperand const & rhs) const override
+	{
+		return (!(*this == rhs));
+	};
+
+	inline const std::string &toString(void) const override
 	{
 		return _str;
+	}
+
+	virtual IOperand const *fsqrt() const override
+	{
+		Creator			ret;
+
+		if (_number <= 0)
+			throw RuntimeErr(" cant sqrt if number <= 0");
+		long double		num = std::sqrt(std::stod(toString()));
+		return ret.createOperand(getType(), std::to_string((num)));
+	}
+
+	const IOperand *fpow(const IOperand &second) const override
+	{
+		Creator			ret;
+		eOperandType	type = std::max(getType(), second.getType());
+		long double		num = std::pow(std::stod(toString()) , std::stod(second.toString()));
+		return ret.createOperand(type, std::to_string((num)));
 	}
 
 private:
@@ -134,4 +169,4 @@ private:
 	std::string const		_str;
 };
 
-#endif //ABSTRACTVM_TOPERANT_H
+#endif

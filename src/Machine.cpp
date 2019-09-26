@@ -4,6 +4,7 @@
 
 #include <ErrorMng.h>
 #include <sstream>
+#include <iomanip>
 #include "Machine.h"
 
 Machine::Machine()
@@ -12,7 +13,6 @@ Machine::Machine()
 
 Machine::~Machine()
 {
-
 }
 
 Machine::Machine(Machine const &src)
@@ -35,22 +35,21 @@ void Machine::fPush(eOperandType type, std::string const &value)
 void Machine::fAssert(eOperandType type, std::string const &value)
 {
 	if (VM.empty())
-		throw RuntimeErr(" asserted empty stack");
-	if (VM.back()->getType() != type || VM.back() == factory.createOperand(type, value))
+		throw RuntimeErr(" assert on empty stack");
+	if (*(VM.back()) != *(factory.createOperand(type, value)))
 		throw RuntimeErr(" Assert fails " + VM.back()->toString());
 }
 
 void Machine::fPop(eOperandType , std::string const &)
 {
 	VM.pop_back();
-	// empty stack err
 }
 
 void Machine::fDump(eOperandType, std::string const &)
 {
-	for (auto dequeIterator = VM.rbegin(); dequeIterator != VM.rend(); ++dequeIterator)
+	for (auto iter = VM.rbegin(); iter != VM.rend(); ++iter)
 	{
-		std::cout << (*dequeIterator)->toString() << std::endl;
+		std::cout << std::fixed << (*iter)->toString() << std::endl;
 	}
 }
 
@@ -58,15 +57,15 @@ void Machine::fAdd(eOperandType , std::string const &)
 {
 	if (VM.size() > 1)
 	{
-		IOperand const *first = VM.back();
-		VM.pop_back();
 		IOperand const *second = VM.back();
 		VM.pop_back();
-		VM.push_front(*first + *second);
+		IOperand const *first = VM.back();
+		VM.pop_back();
+		VM.push_back(*first + *second);
 	}
 	else
 	{
-		throw std::invalid_argument(" to few arg");
+		throw RuntimeErr(" too few arguments");
 	}
 }
 
@@ -74,50 +73,79 @@ void Machine::fSub(eOperandType , std::string const &)
 {
 	if (VM.size() > 1)
 	{
-		IOperand const *first = VM.back();
-		VM.pop_back();
 		IOperand const *second = VM.back();
 		VM.pop_back();
-		VM.push_front(*first - *second);
+		IOperand const *first = VM.back();
+		VM.pop_back();
+		VM.push_back(*first - *second);
 	}
-
+	else
+	{
+		throw RuntimeErr(" too few arguments");
+	}
 }
 
 void Machine::fMul(eOperandType , std::string const &)
 {
-	IOperand const *first = VM.back();
-	VM.pop_back();
-	IOperand const *second = VM.back();
-	VM.pop_back();
-	VM.push_front(*first * *second);
+	if (VM.size() > 1)
+	{
+		IOperand const *second = VM.back();
+		VM.pop_back();
+		IOperand const *first = VM.back();
+		VM.pop_back();
+		VM.push_back(*first * *second);
+	}
+	else
+	{
+		throw RuntimeErr(" too few arguments");
+	}
 }
 
 void Machine::fDiv(eOperandType, std::string const &)
 {
-	IOperand const *first = VM.back();
-	VM.pop_back();
-	IOperand const *second = VM.back();
-	VM.pop_back();
-	VM.push_front(*first / *second);
+	if (VM.size() > 1)
+	{
+		IOperand const *second = VM.back();
+		VM.pop_back();
+		IOperand const *first = VM.back();
+		VM.pop_back();
+		VM.push_back(*first / *second);
+	}
+	else
+	{
+		throw RuntimeErr(" too few arguments");
+	}
 }
 
 void Machine::fMod(eOperandType, std::string const &)
 {
-	IOperand const *first = VM.back();
-	VM.pop_back();
-	IOperand const *second = VM.back();
-	VM.pop_back();
-	VM.push_front(*first % *second);
+	if (VM.size() > 1)
+	{
+		IOperand const *second = VM.back();
+		VM.pop_back();
+		IOperand const *first = VM.back();
+		VM.pop_back();
+		VM.push_back(*first % *second);
+	}
+	else
+	{
+		throw RuntimeErr(" too few arguments");
+	}
 }
 
 void Machine::fPrint(eOperandType, std::string const &)
 {
+	if (VM.size() < 1)
+	{
+		throw RuntimeErr(" too few arguments");
+	}
 	if (VM.back()->getType() == eInt8)
 	{
-		std::cout << static_cast<int8_t>(std::stoi((VM.back()->toString()))) << std::endl;
+		std::cout << static_cast<int8_t>(std::stoi((VM.back()->toString())))
+		<< std::endl;
 	}
 	else
-		throw RuntimeErr("bad type to print");
+		throw RuntimeErr("trying to print non printable type");
 }
 
 void Machine::fExit(eOperandType, std::string const &)
@@ -127,8 +155,8 @@ void Machine::fExit(eOperandType, std::string const &)
 
 void Machine::func(int num, eOperandType type, std::string const &value)
 {
-	typedef void (Machine::*funcptr)(eOperandType type, std::string const &value);
-	funcptr tmp[] = {
+	typedef void (Machine::*ftab)(eOperandType type, std::string const &value);
+	ftab tmp[] = {
 			&Machine::fPush,
 			&Machine::fAssert,
 			&Machine::fPop,
@@ -139,8 +167,10 @@ void Machine::func(int num, eOperandType type, std::string const &value)
 			&Machine::fDiv,
 			&Machine::fMod,
 			&Machine::fPrint,
-			&Machine::fExit
-	};
+			&Machine::fPow,
+			&Machine::fSqrt,
+			&Machine::fExit};
+
 	(this->*(tmp[num]))(type, value);
 }
 
@@ -150,7 +180,9 @@ Machine::Machine(std::queue<Command *> &com) : exitFound(false)
 	{
 		while (!com.empty() && !exitFound)
 		{
-			func(com.front()->getInts(), static_cast<eOperandType>(com.front()->getValue()), com.front()->getNum());
+			func(com.front()->getInts(),
+					static_cast<eOperandType>(com.front()->getValue()),
+					com.front()->getNum());
 			com.pop();
 		}
 		if (!exitFound)
@@ -169,5 +201,35 @@ Machine::Machine(std::queue<Command *> &com) : exitFound(false)
 	catch (...)
 	{
 		throw ;
+	}
+}
+
+void Machine::fSqrt(eOperandType type, std::string const &value)
+{
+	if (!VM.empty())
+	{
+		IOperand const *first = VM.back();
+		VM.pop_back();
+		VM.push_back(first->fsqrt());
+	}
+	else
+	{
+		throw RuntimeErr(" too few arguments");
+	}
+}
+
+void Machine::fPow(eOperandType type, std::string const &value)
+{
+	if (VM.size() > 1)
+	{
+		IOperand const *second = VM.back();
+		VM.pop_back();
+		IOperand const *first = VM.back();
+		VM.pop_back();
+		VM.push_back(first->fpow(*second));
+	}
+	else
+	{
+		throw RuntimeErr(" too few arguments");
 	}
 }

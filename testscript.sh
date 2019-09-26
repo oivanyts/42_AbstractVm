@@ -8,9 +8,9 @@ echo "$file is a directory"
 else
 echo "$file"
 echo  "\n\nHIS<<<<<<<<<<<<<"
-../AbstractVM/abstractVM  $file
+../AbstractVM/abstractVM   < $file
 echo  "\nMY>>>>>>>>>>>>>>"
-./abstractVm  $file
+./abstractVm < $file
 echo  "\n"
 fi
 done

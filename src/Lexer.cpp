@@ -5,28 +5,20 @@
 #include "Lexer.h"
 
 eType Lexer::stateTable[10][10] = {
-	{ REJECT,	INST,	OPENBR,	CLOSEBR,	NUMBER,	FLOAT,	ENDL,	SPACE,	COMNT,	SIGN},
-	{ INST,		INST,	REJECT, REJECT, 	INST,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
-	{ OPENBR,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
-	{ CLOSEBR,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
-	{ NUMBER,	REJECT,	REJECT,	REJECT,		NUMBER,	FLOAT,	REJECT,	REJECT, REJECT, REJECT},
-	{ FLOAT, 	REJECT,	REJECT,	REJECT,		FLOAT,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
-	{ REJECT,		REJECT,	REJECT,	REJECT,		REJECT,	REJECT, ENDL,	REJECT, REJECT,	REJECT},
-	{ SPACE,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	SPACE,	REJECT, REJECT},
-	{ COMNT,	COMNT,	COMNT,	COMNT,		COMNT,	COMNT,	REJECT,	COMNT,	COMNT,	COMNT},
-	{ SIGN,		REJECT,	REJECT,	REJECT,		NUMBER,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
+			{ REJECT,	INST,	OPENBR,	CLOSEBR,	NUMBER,	FLOAT,	REJECT,	REJECT,	COMNT,	SIGN},
+/*INST*/	{ REJECT,	INST,	REJECT, REJECT, 	INST,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
+/*OPENBR*/	{ REJECT,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
+/*CLOSEBR*/	{ REJECT,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
+/*NUMBER*/	{ REJECT,	REJECT,	REJECT,	REJECT,		NUMBER,	FLOAT,	REJECT,	REJECT, REJECT, REJECT},
+/*FLOAT*/	{ REJECT, 	REJECT,	REJECT,	REJECT,		FLOAT,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
+/*ENDL*/	{ REJECT,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT, ENDL,	REJECT, REJECT,	REJECT},
+/*SPACE*/	{ REJECT,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	SPACE,	REJECT, REJECT},
+/*COMNT*/	{ REJECT,	COMNT,	COMNT,	COMNT,		COMNT,	COMNT,	REJECT,	COMNT,	COMNT,	COMNT},
+/*SIGN*/	{ REJECT,	REJECT,	REJECT,	REJECT,		NUMBER,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
 };
 
-
-//Lexer::Lexer() : _raw()
-//{
-//
-//}
-
 Lexer::~Lexer()
-{
-	//delete tokens;
-}
+{ }
 
 Lexer::Lexer(Lexer const &src) : _raw(src._raw)
 {
@@ -42,7 +34,7 @@ Lexer &Lexer::operator=(Lexer const &rhs)
 	return *this;
 }
 
-Lexer::Lexer(std::stringstream &sorce) : _raw(sorce.str())
+Lexer::Lexer(std::stringstream &sorce) : _raw(sorce.str()), _errors(0)
 {
 	runFile();
 }
@@ -53,37 +45,54 @@ void Lexer::runFile()
 	std::string		currTok;
 	int 			_location = 0;
 
-//	std::cout << _raw;
-	
 	for (auto wrapIter = &(_raw)[0]; *wrapIter != '\0'; wrapIter++)
 	{
-		col = findType(*wrapIter);
-		curr = stateTable[old][col];
-		if (curr == REJECT || col == REJECT)
+		try
 		{
-			if (old != SPACE && old != COMNT)
+			if (!(col = findType(*wrapIter)))
 			{
-				_tokQue.push(new Token(currTok, _location, old));
+				_errors++;
+				currTok = *wrapIter;
+				throw LexErr(" Bad token '" + currTok +"' at " + _tokQue.back()->getLocation());
 			}
-			currTok = *wrapIter;
-			if (old == ENDL)
+			curr = stateTable[old][col];
+			if (curr == REJECT || col == REJECT)
 			{
-				_location = 0;
+				if (old != SPACE && old != COMNT)
+				{
+					_tokQue.push(new Token(currTok, _location, old));
+				}
+				currTok = *wrapIter;
+				if (old == ENDL)
+				{
+					_location = 0;
+				}
+				_location++;
+				old = col;
+				continue ;
 			}
-			_location++;
-			old = col;
-			continue ;
+			else
+			{
+				currTok += *wrapIter;
+				old = curr;
+				_location++;
+			}
+			if (currTok == ";;")
+			{
+				if (_errors)
+					throw LexErr();
+				return ;
+			}
 		}
-		else
+		catch (LexErr &e)
 		{
-			currTok += *wrapIter;
-			old = curr;
-			_location++;
+			std::cout << e.what() << std::endl;
 		}
-		if (currTok == ";;")
-			return ;
 	}
 	_tokQue.push(new Token(currTok, _location, old));
+	_tokQue.push(new Token("\n", ++_location, ENDL));
+	if (_errors)
+		throw LexErr();
 }
 
 eType Lexer::findType(const char &i) const
@@ -106,7 +115,8 @@ eType Lexer::findType(const char &i) const
 		return NUMBER;
 	else if (std::isspace(i))
 		return SPACE;
-	return REJECT;
+	else
+		return REJECT;
 }
 
 const std::queue<Token *> &Lexer::getTokQue() const

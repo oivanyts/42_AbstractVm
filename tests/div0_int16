@@ -1,0 +1,8 @@
+; -------------
+; exemple.avm -
+; -------------
+push int16(12456)
+push int8(0)
+div
+dump
+exit

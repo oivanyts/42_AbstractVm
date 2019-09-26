@@ -39,6 +39,9 @@ public:
 	int getNumInst() const;
 	const std::string &getValue() const;
 	const std::string getLocation();
+
+	static int getEndlCounter();
+
 	static std::string	tokType[12];
 private:
 

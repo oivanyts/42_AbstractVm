@@ -1,0 +1,11 @@
+push float(2.2)
+push float(2.0)
+pow
+dump
+push int32(3)
+pow
+dump
+push int32(121)
+sqrt
+dump
+exit

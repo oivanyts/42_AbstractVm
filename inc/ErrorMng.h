@@ -23,6 +23,15 @@ protected:
 	std::string outLine;
 };
 
+class GoodCommand : public ErrorMng
+{
+public:
+	GoodCommand() noexcept = default;
+	GoodCommand(GoodCommand  const &src) = default;
+	GoodCommand  &operator=(GoodCommand  const &rhs) = default;
+	virtual ~GoodCommand() = default;
+};
+
 class SyntaxErr : public ErrorMng
 {
 
