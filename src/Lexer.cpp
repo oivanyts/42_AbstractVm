@@ -55,7 +55,7 @@ void Lexer::runFile(bool isfile)
 			{
 				_errors++;
 				currTok = *wrapIter;
-				throw LexErr(" Bad token '" + currTok +"' at " + _tokQue.back()->getLocation());
+				throw LexErr(" Bad token at " + _tokQue.back()->getLocation());
 			}
 			curr = stateTable[old][col];
 			if (curr == REJECT || col == REJECT)
