@@ -36,8 +36,10 @@ void Machine::fAssert(eOperandType type, std::string const &value)
 {
 	if (VM.empty())
 		throw RuntimeErr(" assert on empty stack");
-	if (*(VM.back()) != *(factory.createOperand(type, value)))
-		throw RuntimeErr(" Assert fails " + VM.back()->toString());
+	IOperand const *first = factory.createOperand(type, value);
+	if (*(VM.back()) != *(first))
+		throw RuntimeErr(" Assert fails '" + VM.back()->toString() + "' != '" +
+		first->toString());
 }
 
 void Machine::fPop(eOperandType , std::string const &)
