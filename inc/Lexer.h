@@ -16,7 +16,7 @@ class Lexer
 
 public:
 	Lexer() = default;
-	~Lexer();
+	~Lexer() = default;
 	Lexer(Lexer const &src);
 	Lexer(std::stringstream &sorce, bool isfile);
 	Lexer &operator=(Lexer const &rhs);
@@ -25,7 +25,7 @@ public:
 private:
 	void runFile(bool isfile);
 	const std::string 			_raw;
-	int						_errors;
+	int							_errorsLex{};
 	std::queue<Token *>			_tokQue;
 	static eType stateTable[10][10];
 

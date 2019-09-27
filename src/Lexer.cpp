@@ -17,12 +17,7 @@ eType Lexer::stateTable[10][10] = {
 /*SIGN*/	{ REJECT,	REJECT,	REJECT,	REJECT,		NUMBER,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
 };
 
-Lexer::~Lexer()
-{
-
-}
-
-Lexer::Lexer(Lexer const &src) : _raw(src._raw)
+Lexer::Lexer(Lexer const &src) : _raw(src._raw) , _errorsLex(src._errorsLex)
 {
 	*this = src;
 }
@@ -36,7 +31,7 @@ Lexer &Lexer::operator=(Lexer const &rhs)
 	return *this;
 }
 
-Lexer::Lexer(std::stringstream &sorce, bool isfile) : _raw(sorce.str()), _errors(0)
+Lexer::Lexer(std::stringstream &sorce, bool isfile) : _raw(sorce.str()), _errorsLex(0)
 {
 	runFile(isfile);
 }
@@ -53,16 +48,16 @@ void Lexer::runFile(bool isfile)
 		{
 			if (!(col = findType(*wrapIter)))
 			{
-				_errors++;
+				_errorsLex++;
 				currTok = *wrapIter;
-				throw LexErr(" Bad token at " + _tokQue.back()->getLocation());
+				throw LexErr(" Bad token at "  + _tokQue.back()->getLocation());
 			}
 			curr = stateTable[old][col];
-			if (curr == REJECT || col == REJECT)
+			if (curr == REJECT)
 			{
 				if (!isfile && currTok == ";;")
 				{
-					if (_errors)
+					if (_errorsLex)
 						throw LexErr();
 					return ;
 				}
@@ -93,7 +88,7 @@ void Lexer::runFile(bool isfile)
 	}
 	_tokQue.push(new Token(currTok, _location, old));
 	_tokQue.push(new Token("\n", ++_location, ENDL));
-	if (_errors)
+	if (_errorsLex)
 		throw LexErr();
 }
 
