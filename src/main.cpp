@@ -13,26 +13,29 @@
 
 int main(int ac, char *av[]) {
 
-
-	std::stringstream buffer;
-	if (ac > 1)
-	{
-		std::string	filename(av[1]);
-		std::ifstream fileopened(filename);
-		buffer << fileopened.rdbuf();
-	}
-	else
-	{
-		std::string line;
-		while (line != ";;" && !std::cin.eof())
-		{
-
-			std::getline(std::cin, line, '\n');
-			buffer << line << '\n';
-		}
-	}
 	try
 	{
+		std::stringstream buffer;
+		if (ac > 1)
+		{
+			std::string	filename(av[1]);
+			std::ifstream fileopened(filename);
+			if (fileopened)
+				buffer << fileopened.rdbuf();
+			else
+				throw FileErr();
+		}
+		else
+		{
+			std::string line;
+			while (line != ";;" && !std::cin.eof())
+			{
+
+				std::getline(std::cin, line, '\n');
+				buffer << line << '\n';
+			}
+		}
+
 		Lexer         lex(buffer);
 		Parser        parse(lex.getTokQue());
 		Machine       main(parse.getComands());

@@ -37,3 +37,8 @@ const char *GotExit::what() const noexcept
 {
 	return "";
 }
+
+FileErr::FileErr() noexcept
+{
+	outLine = "\033[1;31m Error: \033[0mbad file";
+}

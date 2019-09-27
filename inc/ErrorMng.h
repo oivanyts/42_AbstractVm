@@ -74,6 +74,16 @@ public:
 	~GotExit() = default;
 	const char *what() const noexcept;
 };
+
+class FileErr :  public ErrorMng
+{
+public:
+	FileErr() noexcept;
+	FileErr(FileErr const &src) = default;
+	FileErr &operator=(FileErr const &rhs) = default;
+	~FileErr() = default;
+};
+
 class RuntimeErr : public ErrorMng
 {
 
