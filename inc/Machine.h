@@ -32,7 +32,6 @@ private:
 	std::deque<IOperand const *> VM;
 	Creator	factory;
 	bool 	exitFound;
-
 	void 	fPush(eOperandType type, std::string const &value);
 	void 	fAssert(eOperandType type, std::string const &value);
 	void 	fPop(eOperandType type, std::string const &value);
@@ -46,6 +45,7 @@ private:
 	void	fExit(eOperandType type, std::string const &value);
 	void	fPow(eOperandType type, std::string const &value);
 	void	fSqrt(eOperandType type, std::string const &value);
+	void	clearIt();
 };
 
 

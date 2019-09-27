@@ -18,7 +18,9 @@ eType Lexer::stateTable[10][10] = {
 };
 
 Lexer::~Lexer()
-{ }
+{
+
+}
 
 Lexer::Lexer(Lexer const &src) : _raw(src._raw)
 {

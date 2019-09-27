@@ -29,8 +29,6 @@ std::vector<std::string> valueTok = {
 Token::Token() : _type(SPACE), _value(" "), col(0), row(0)
 { }
 
-Token::~Token()
-{ }
 
 Token::Token(Token const &src) : _type(src._type), _value(src._value), col(src.col), row(src.row), _numInst(src._numInst)
 {

@@ -44,9 +44,9 @@ public:
 			int ret1;
 			tmp >> ret1;
 			if (ret1 > std::numeric_limits<T>::max())
-			throw RuntimeErr("value overflow " + basicString);
+				throw RuntimeErr("value overflow " + basicString);
 			else if (ret1 < std::numeric_limits<T>::lowest())
-			throw RuntimeErr("value umnderflow " + basicString);
+				throw RuntimeErr("value underflow " + basicString);
 			ret = static_cast<T>(ret1);
 			return (ret);
 		}
@@ -75,7 +75,16 @@ public:
 
 	TOperant(std::string const &value) : _number(toNum(value)),
 	_type(setType(_number)), _str(std::to_string(_number))
-	{	};
+	{
+		if (_type != eInt8)
+		{
+			std::stringstream ss;
+			ss << static_cast<T>(_number);
+			_str = ss.str();
+		}
+		else
+			_str = std::to_string(_number);
+	};
 
 
 	inline int getPrecision(void) const override
@@ -108,7 +117,6 @@ public:
 		Creator			ret;
 		eOperandType	type = std::max(this->_type, rhs.getType());
 		long double		num = _number * std::stod(rhs.toString());
-
 		return ret.createOperand(type, std::to_string((num)));
 	}
 
@@ -172,7 +180,7 @@ public:
 private:
 	T	const				_number;
 	eOperandType const	 	_type;
-	std::string const		_str;
+	std::string				_str;
 };
 
 #endif

@@ -30,7 +30,7 @@ class Token
 public:
 	Token();
 	Token(std::string str, int place, eType curr);
-	~Token();
+	~Token() = default;
 	Token(Token const &src);
 
 	Token &operator=(Token const &rhs);
@@ -40,7 +40,6 @@ public:
 	const std::string &getValue() const;
 	const std::string getLocation();
 
-	static int getEndlCounter();
 
 	static std::string	tokType[12];
 private:

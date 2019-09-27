@@ -24,6 +24,7 @@ public:
 	std::queue<Command *> & getComands();
 
 private:
+	void cleanCom();
 	std::queue<Command *>	comands;
 	bool					errFound;
 

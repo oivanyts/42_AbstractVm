@@ -69,7 +69,10 @@ Parser::Parser(std::queue<Token *> a) : errFound(false)
 		}
 	}
 	if (errFound)
+	{
+		cleanCom();
 		throw SyntaxErr();
+	}
 }
 
 std::queue<Command *> & Parser::getComands()
@@ -81,9 +84,21 @@ void Parser::skipTokens(std::queue<Token *> *queue)
 {
 	while (queue->front()->getType() != ENDL)
 	{
-//		Token	*tmp = queue->front() ;
+		Token	*tmp = queue->front() ;
 		queue->pop();
-//		delete(tmp);
+		delete(tmp);
 	}
+	Token	*tmp = queue->front() ;
 	queue->pop();
+	delete(tmp);
+}
+
+void Parser::cleanCom()
+{
+	while (!comands.empty())
+	{
+		auto tmp = comands.front();
+		comands.pop();
+		delete(tmp);
+	}
 }

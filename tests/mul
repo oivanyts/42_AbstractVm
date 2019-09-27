@@ -4,8 +4,8 @@
 push float(1.1)
 push float(42.0)
 mul
-push float(1111256546465465.1)
-push float(1222.0)
+push float(0.000002565464654651)
+push float(12.0)
 mul
 push int8(12)
 push int16(244)
@@ -15,3 +15,4 @@ push int8(125)
 mul
 dump
 exit
+;;

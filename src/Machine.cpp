@@ -13,6 +13,10 @@ Machine::Machine()
 
 Machine::~Machine()
 {
+	for (auto dequeIterator = VM.begin(); dequeIterator != VM.end(); ++dequeIterator)
+	{
+		delete(*dequeIterator);
+	}
 }
 
 Machine::Machine(Machine const &src)
@@ -38,17 +42,26 @@ void Machine::fAssert(eOperandType type, std::string const &value)
 		throw RuntimeErr(" assert on empty stack");
 	IOperand const *first = factory.createOperand(type, value);
 	if (*(VM.back()) != *(first))
-		throw RuntimeErr(" Assert fails '" + VM.back()->toString() + "' != '" +
-		first->toString());
+	{
+		delete(first);
+		throw RuntimeErr(" Assert fails '" + VM.back()->toString() + "'");
+	}
+	delete(first);
 }
 
 void Machine::fPop(eOperandType , std::string const &)
 {
+	if (VM.empty())
+		throw RuntimeErr(" pop on empty stack");
+	IOperand const *first = VM.back();
 	VM.pop_back();
+	delete(first);
 }
 
 void Machine::fDump(eOperandType, std::string const &)
 {
+	if (VM.empty())
+		std::cout << " dumped empty stack" << std::endl;
 	for (auto iter = VM.rbegin(); iter != VM.rend(); ++iter)
 	{
 		std::cout << std::fixed << (*iter)->toString() << std::endl;
@@ -64,6 +77,8 @@ void Machine::fAdd(eOperandType , std::string const &)
 		IOperand const *first = VM.back();
 		VM.pop_back();
 		VM.push_back(*first + *second);
+		delete(first);
+		delete(second);
 	}
 	else
 	{
@@ -80,6 +95,8 @@ void Machine::fSub(eOperandType , std::string const &)
 		IOperand const *first = VM.back();
 		VM.pop_back();
 		VM.push_back(*first - *second);
+		delete(first);
+		delete(second);
 	}
 	else
 	{
@@ -96,6 +113,8 @@ void Machine::fMul(eOperandType , std::string const &)
 		IOperand const *first = VM.back();
 		VM.pop_back();
 		VM.push_back(*first * *second);
+		delete(first);
+		delete(second);
 	}
 	else
 	{
@@ -112,6 +131,8 @@ void Machine::fDiv(eOperandType, std::string const &)
 		IOperand const *first = VM.back();
 		VM.pop_back();
 		VM.push_back(*first / *second);
+		delete(first);
+		delete(second);
 	}
 	else
 	{
@@ -128,6 +149,8 @@ void Machine::fMod(eOperandType, std::string const &)
 		IOperand const *first = VM.back();
 		VM.pop_back();
 		VM.push_back(*first % *second);
+		delete(first);
+		delete(second);
 	}
 	else
 	{
@@ -182,26 +205,22 @@ Machine::Machine(std::queue<Command *> &com) : exitFound(false)
 	{
 		while (!com.empty() && !exitFound)
 		{
+			Command *tmp = com.front();
 			func(com.front()->getInts(),
 					static_cast<eOperandType>(com.front()->getValue()),
 					com.front()->getNum());
 			com.pop();
+			delete(tmp);
 		}
 		if (!exitFound)
 		{
+			clearIt();
 			throw NoExitFound();
 		}
 	}
-	catch (SyntaxErr &e)
+	catch (ErrorMng &e)
 	{
-		std::cout << e.what() << std::endl;
-	}
-	catch (NoExitFound &e)
-	{
-		std::cout << e.what() << std::endl;
-	}
-	catch (...)
-	{
+		clearIt();
 		throw ;
 	}
 }
@@ -233,5 +252,13 @@ void Machine::fPow(eOperandType , std::string const &)
 	else
 	{
 		throw RuntimeErr(" too few arguments");
+	}
+}
+
+void Machine::clearIt()
+{
+	for (auto dequeIterator = VM.begin(); dequeIterator != VM.end(); ++dequeIterator)
+	{
+		delete(*dequeIterator);
 	}
 }
