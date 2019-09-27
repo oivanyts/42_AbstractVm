@@ -204,7 +204,7 @@ Machine::Machine(std::queue<Command *> &com) : exitFound(false)
 	}
 }
 
-void Machine::fSqrt(eOperandType type, std::string const &value)
+void Machine::fSqrt(eOperandType , std::string const &)
 {
 	if (!VM.empty())
 	{
@@ -218,7 +218,7 @@ void Machine::fSqrt(eOperandType type, std::string const &value)
 	}
 }
 
-void Machine::fPow(eOperandType type, std::string const &value)
+void Machine::fPow(eOperandType , std::string const &)
 {
 	if (VM.size() > 1)
 	{

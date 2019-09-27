@@ -26,6 +26,12 @@ public:
 	{	};
 	inline TOperant &operator=(TOperant const &rhs)
 	{
+		if (*this == rhs)
+		{
+			_number = rhs._number;
+			_type = rhs._type;
+			_str = rhs._str;
+		}
 		return *this;
 	};
 
