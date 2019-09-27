@@ -1,8 +1,0 @@
-; -------------
-; exemple.avm -
-; -------------
-push double(1234.5123)
-push double(0.0000000000)
-mod
-dump
-exit

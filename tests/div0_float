@@ -1,8 +1,0 @@
-; -------------
-; exemple.avm -
-; -------------
-push float(42.0)
-push float(0.0)
-div
-dump
-exit

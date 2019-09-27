@@ -1,8 +1,0 @@
-; -------------
-; exemple.avm -
-; -------------
-push int8(14)
-push int8(0)
-mod
-dump
-exit
