@@ -15,9 +15,11 @@ int main(int ac, char *av[]) {
 
 	try
 	{
+		bool sorcefile = false;
 		std::stringstream buffer;
 		if (ac > 1)
 		{
+			sorcefile = true;
 			std::string	filename(av[1]);
 			std::ifstream fileopened(filename);
 			if (fileopened)
@@ -36,7 +38,7 @@ int main(int ac, char *av[]) {
 			}
 		}
 
-		Lexer         lex(buffer);
+		Lexer lex(buffer, sorcefile);
 		Parser        parse(lex.getTokQue());
 		Machine       main(parse.getComands());
 	}

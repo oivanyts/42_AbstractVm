@@ -34,12 +34,12 @@ Lexer &Lexer::operator=(Lexer const &rhs)
 	return *this;
 }
 
-Lexer::Lexer(std::stringstream &sorce) : _raw(sorce.str()), _errors(0)
+Lexer::Lexer(std::stringstream &sorce, bool isfile) : _raw(sorce.str()), _errors(0)
 {
-	runFile();
+	runFile(isfile);
 }
 
-void Lexer::runFile()
+void Lexer::runFile(bool isfile)
 {
 	eType			old = ENDL, curr, col;
 	std::string		currTok;
@@ -58,6 +58,12 @@ void Lexer::runFile()
 			curr = stateTable[old][col];
 			if (curr == REJECT || col == REJECT)
 			{
+				if (!isfile && currTok == ";;")
+				{
+					if (_errors)
+						throw LexErr();
+					return ;
+				}
 				if (old != SPACE && old != COMNT)
 				{
 					_tokQue.push(new Token(currTok, _location, old));
@@ -76,12 +82,6 @@ void Lexer::runFile()
 				currTok += *wrapIter;
 				old = curr;
 				_location++;
-			}
-			if (currTok == ";;")
-			{
-				if (_errors)
-					throw LexErr();
-				return ;
 			}
 		}
 		catch (LexErr &e)

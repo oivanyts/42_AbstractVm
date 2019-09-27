@@ -18,12 +18,12 @@ public:
 	Lexer() = default;
 	~Lexer();
 	Lexer(Lexer const &src);
-	Lexer(std::stringstream &sorce);
+	Lexer(std::stringstream &sorce, bool isfile);
 	Lexer &operator=(Lexer const &rhs);
 	const std::queue<Token *> &getTokQue() const;
 
 private:
-	void runFile();
+	void runFile(bool isfile);
 	const std::string 			_raw;
 	int						_errors;
 	std::queue<Token *>			_tokQue;
