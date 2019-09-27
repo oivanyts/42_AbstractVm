@@ -41,7 +41,7 @@ Lexer::Lexer(std::stringstream &sorce) : _raw(sorce.str()), _errors(0)
 
 void Lexer::runFile()
 {
-	eType			old = REJECT, curr, col;
+	eType			old = ENDL, curr, col;
 	std::string		currTok;
 	int 			_location = 0;
 

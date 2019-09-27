@@ -63,7 +63,7 @@ Parser::Parser(std::queue<Token *> a) : errFound(false)
 		catch (ErrorMng &e)
 		{
 			std::cout << e.what() << std::endl;
-			std::cout << ">> " << a.front()->getValue() ;
+			std::cout << ">> " << a.front()->getValue() << std::endl;
 			errFound = true;
 			skipTokens(&a);
 		}

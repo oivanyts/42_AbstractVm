@@ -35,7 +35,7 @@ void Command::setNum(const std::string &number)
 	}
 	else if (status != statCom::NUM)
 	{
-		throw SyntaxErr(" at "  + curr->getLocation() + "passed number");
+		throw SyntaxErr("at "  + curr->getLocation() + " passed number");
 	}
 	else
 	{
@@ -52,7 +52,7 @@ void Command::setValue(int val)
 	}
 	else
 	{
-		throw SyntaxErr("bad place for value");
+		throw SyntaxErr("at " + curr->getLocation() + " bad place for value");
 	}
 }
 
@@ -64,7 +64,7 @@ void Command::setStatusBr(bool open)
 		status = statCom::ENDLINE;
 	else
 	{
-		throw SyntaxErr(open ? "open bracket expected" : "closed bracket expected");
+		throw SyntaxErr("at " + curr->getLocation() + " bad place for bracket");
 	}
 }
 
@@ -77,7 +77,7 @@ void Command::setInts(int instance)
 	}
 	else
 	{
-		throw SyntaxErr(" at " + curr->getLocation() +"bad place for instance");
+		throw SyntaxErr("at " + curr->getLocation() +" bad place for instance");
 	}
 }
 
@@ -96,7 +96,7 @@ void Command::setEnd()
 void Command::setFunc(Token tok)
 {
 	curr = &tok;
-	tok.printTok();
+//	tok.printTok();
 	switch (tok.getType())
 	{
 		case INST:
@@ -106,7 +106,7 @@ void Command::setFunc(Token tok)
 		}
 		case BADINST :
 		{
-			throw SyntaxErr(" at " + curr->getLocation() + " bad instance");
+			throw SyntaxErr("at " + curr->getLocation() + " bad instance");
 		}
 		case VALUE :
 		{
