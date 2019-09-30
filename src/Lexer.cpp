@@ -13,7 +13,7 @@ eType Lexer::stateTable[10][10] = {
 /*FLOAT*/	{ REJECT, 	REJECT,	REJECT,	REJECT,		FLOAT,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
 /*ENDL*/	{ REJECT,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT, ENDL,	REJECT, REJECT,	REJECT},
 /*SPACE*/	{ REJECT,	REJECT,	REJECT,	REJECT,		REJECT,	REJECT,	REJECT,	SPACE,	REJECT, REJECT},
-/*COMNT*/	{ REJECT,	COMNT,	COMNT,	COMNT,		COMNT,	COMNT,	REJECT,	COMNT,	COMNT,	COMNT},
+/*COMNT*/	{ COMNT,	COMNT,	COMNT,	COMNT,		COMNT,	COMNT,	REJECT,	COMNT,	COMNT,	COMNT},
 /*SIGN*/	{ REJECT,	REJECT,	REJECT,	REJECT,		NUMBER,	REJECT,	REJECT,	REJECT, REJECT, REJECT},
 };
 
@@ -46,7 +46,7 @@ void Lexer::runFile(bool isfile)
 	{
 		try
 		{
-			if (!(col = findType(*wrapIter)))
+			if (!(col = findType(*wrapIter)) && old != COMNT)
 			{
 				_errorsLex++;
 				currTok = *wrapIter;

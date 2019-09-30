@@ -45,7 +45,6 @@ private:
 	void	fExit(eOperandType type, std::string const &value);
 	void	fPow(eOperandType type, std::string const &value);
 	void	fSqrt(eOperandType type, std::string const &value);
-	void	clearIt();
 };
 
 

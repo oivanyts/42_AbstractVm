@@ -214,13 +214,11 @@ Machine::Machine(std::queue<Command *> &com) : exitFound(false)
 		}
 		if (!exitFound)
 		{
-			clearIt();
 			throw NoExitFound();
 		}
 	}
 	catch (ErrorMng &e)
 	{
-		clearIt();
 		throw ;
 	}
 }
@@ -255,10 +253,4 @@ void Machine::fPow(eOperandType , std::string const &)
 	}
 }
 
-void Machine::clearIt()
-{
-	for (auto dequeIterator = VM.begin(); dequeIterator != VM.end(); ++dequeIterator)
-	{
-		delete(*dequeIterator);
-	}
-}
+

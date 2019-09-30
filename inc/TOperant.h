@@ -19,7 +19,7 @@ class TOperant : public IOperand
 public:
 	TOperant() = default;
 
-	~TOperant() {};
+	~TOperant() = default;
 
 	TOperant(TOperant const &src) : _number(src._number), _type(src._type),
 									_str(src._str)
